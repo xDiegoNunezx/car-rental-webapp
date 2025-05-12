@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="es">
+<head th:replace="~{plantillas/plantilla :: head}"></head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+<main class="container shadow-lg p-4 mb-5 bg-body-tertiary rounded">
+  <h1 class="text-center mb-4">Preguntas Frecuentes</h1>
+  <p class="text-center">Aquí encontrarás respuestas a las dudas más comunes sobre nuestro servicio de renta de autos.</p>
+
+  <div class="accordion mt-4" id="faqAccordion">
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq1-heading">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="true" aria-controls="faq1">
+          ¿Qué necesito para rentar un automóvil?
+        </button>
+      </h2>
+      <div id="faq1" class="accordion-collapse collapse show" aria-labelledby="faq1-heading" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Necesitas ser mayor de 21 años, contar con una licencia de conducir vigente, identificación oficial y tarjeta de crédito para el depósito.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq2-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+          ¿Puedo reservar un auto en línea?
+        </button>
+      </h2>
+      <div id="faq2" class="accordion-collapse collapse" aria-labelledby="faq2-heading" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          ¡Claro! Puedes realizar tu reserva fácilmente desde nuestro sitio web en cualquier momento del día.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq3-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+          ¿Qué incluye el costo del alquiler?
+        </button>
+      </h2>
+      <div id="faq3" class="accordion-collapse collapse" aria-labelledby="faq3-heading" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          El costo incluye kilometraje libre, seguro básico contra daños a terceros, y asistencia vial 24/7.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq4-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+          ¿Puedo devolver el auto en una sucursal diferente?
+        </button>
+      </h2>
+      <div id="faq4" class="accordion-collapse collapse" aria-labelledby="faq4-heading" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Sí, ofrecemos la opción de devolución en otra sucursal con un cargo adicional. Consulta disponibilidad al momento de reservar.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq5-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
+          ¿Qué pasa si tengo un accidente con el auto?
+        </button>
+      </h2>
+      <div id="faq5" class="accordion-collapse collapse" aria-labelledby="faq5-heading" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Deberás comunicarte inmediatamente con nuestro servicio de asistencia. Si contrataste el seguro adicional, los daños estarán cubiertos según lo estipulado.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+</body>
+</html>

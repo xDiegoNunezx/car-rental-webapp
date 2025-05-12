@@ -1,0 +1,14 @@
+html {
+    height: 100%;
+}
+body{
+     height: 100%;
+      background: rgb(97, 0, 0);
+      background: linear-gradient(180deg, rgb(141, 2, 31) 100%, rgba(141, 2, 31, 0.55) 100%);
+}.navbar-custom {
+     background-color: #6c0101;
+ }
+
+/*
+background: linear-gradient(180deg, rgb(141, 2, 31) 23%, rgba(141, 2, 31, 0.55) 100%);
+*/

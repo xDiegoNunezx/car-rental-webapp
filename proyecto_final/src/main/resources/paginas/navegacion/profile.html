@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{plantillas/plantilla :: head}"></head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+<main class="container text-center shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+  <h1>Mis Reservas</h1>
+  <p style="text-align: left;">Aquí puedes ver el historial de tus reservas de vehículos.</p>
+
+  <!-- Mensaje flash de cancelación exitosa -->
+  <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <span th:text="${mensaje}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <!-- Tabla de reservas -->
+  <div th:if="${!reservas.isEmpty()}" class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+      <tr>
+        <th scope="col">Vehículo</th>
+        <th scope="col">Fecha Reserva</th>
+        <th scope="col">Fecha Inicio</th>
+        <th scope="col">Fecha Fin</th>
+        <th scope="col">Extras</th>
+        <th scope="col">Total</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="reserva : ${reservas}">
+        <td>
+          <span th:text="${reserva.vehiculo.marca} + ' ' + ${reserva.vehiculo.modelo}"></span>
+          <br>
+          <small class="text-muted" th:text="${reserva.vehiculo.numeroPlaca}"></small>
+        </td>
+        <td th:text="${#temporals.format(reserva.fechaReserva, 'dd/MM/yyyy')}"></td>
+        <td th:text="${#temporals.format(reserva.fechaInicio, 'dd/MM/yyyy')}"></td>
+        <td th:text="${#temporals.format(reserva.fechaFin, 'dd/MM/yyyy')}"></td>
+        <td>
+          <span th:if="${reserva.asientoInfantil}" class="badge bg-info me-1">Asiento Infantil</span>
+          <span th:if="${reserva.asientoElevador}" class="badge bg-info me-1">Asiento Elevador</span>
+          <span th:if="${reserva.conductoresAdicionales}" class="badge bg-info">Conductores Extra</span>
+          <span th:if="${!reserva.asientoInfantil && !reserva.asientoElevador && !reserva.conductoresAdicionales}">
+            Sin extras
+          </span>
+        </td>
+        <td th:text="${'$' + #numbers.formatDecimal(reserva.pagoTotal, 1, 2, 'POINT')}"></td>
+        <td>
+          <span th:if="${reserva.cancelada}" class="badge bg-danger">Cancelada</span>
+          <span th:unless="${reserva.cancelada}" class="badge bg-success">Activa</span>
+        </td>
+        <td>
+          <div class="d-flex flex-column gap-1">
+            <form th:action="@{/reserva/cancelar/{reservaId}(reservaId=${reserva.reservaId})}"
+                  method="post"
+                  th:if="${!reserva.cancelada && reserva.fechaInicio.isAfter(T(java.time.LocalDate).now())}">
+              <button type="submit" class="btn btn-danger btn-sm w-100">Cancelar</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mensaje cuando no hay reservas -->
+  <div th:if="${reservas.isEmpty()}" class="alert alert-info">
+    No tienes reservas registradas.
+    <a th:href="@{/vehiculos}" class="alert-link">¡Haz tu primera reserva aquí!</a>
+  </div>
+
+</main>
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+</body>
+</html>

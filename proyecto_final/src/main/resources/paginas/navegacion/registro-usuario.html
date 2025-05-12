@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{plantillas/plantilla :: head}"></head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+<main class="container text-center shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+    <h1>Registro de Usuario</h1>
+    <form th:action="@{/recibir-registro-usuario}" th:object="${usuario}" method="post">
+        <div th:if="${#fields.hasErrors('*')}" class='alert alert-danger' role="alert">
+            Verifique los siguientes inconvenientes
+            <ul>
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="form-floating">
+                    <input th:class="${#fields.hasErrors('nombreCompleto')}? 'form-control is-invalid' : 'form-control'"
+                           type="text" id="nombreCompleto" name="nombreCompleto" th:field="*{nombreCompleto}" placeholder="Nombre Completo">
+                    <label for="nombreCompleto">Nombre Completo:</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="form-floating">
+                    <input th:class="${#fields.hasErrors('email')}? 'form-control is-invalid' : 'form-control'"
+                           type="email" id="email" name="email" th:field="*{email}" placeholder="Correo Electrónico">
+                    <label for="email">Correo Electrónico:</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="form-floating">
+                    <input th:class="${#fields.hasErrors('contrasena')}? 'form-control is-invalid' : 'form-control'"
+                           type="password" id="contrasena" name="contrasena" th:field="*{contrasena}" placeholder="Contraseña">
+                    <label for="contrasena">Contraseña:</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="form-floating">
+                    <input th:class="${#fields.hasErrors('fechaNacimiento')}? 'form-control is-invalid' : 'form-control'"
+                           type="date" id="fechaNacimiento" name="fechaNacimiento" th:field="*{fechaNacimiento}">
+                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="form-floating">
+                    <input th:class="${#fields.hasErrors('rfc')}? 'form-control is-invalid' : 'form-control'"
+                           type="text" id="rfc" name="rfc" th:field="*{rfc}" placeholder="RFC">
+                    <label for="rfc">RFC:</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="form-floating">
+                    <input th:class="${#fields.hasErrors('numeroTelefono')}? 'form-control is-invalid' : 'form-control'"
+                           type="text" id="numeroTelefono" name="numeroTelefono" th:field="*{numeroTelefono}" placeholder="Número de Teléfono">
+                    <label for="numeroTelefono">Número de Teléfono:</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="form-floating">
+                    <input th:class="${#fields.hasErrors('direccion')}? 'form-control is-invalid' : 'form-control'"
+                           type="text" id="direccion" name="direccion" th:field="*{direccion}" placeholder="Dirección">
+                    <label for="direccion">Dirección:</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="form-floating">
+                    <input th:class="${#fields.hasErrors('pais')}? 'form-control is-invalid' : 'form-control'"
+                           type="text" id="pais" name="pais" th:field="*{pais}" placeholder="País">
+                    <label for="pais">País:</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="form-floating">
+                    <input th:class="${#fields.hasErrors('ciudad')}? 'form-control is-invalid' : 'form-control'"
+                           type="text" id="ciudad" name="ciudad" th:field="*{ciudad}" placeholder="Ciudad">
+                    <label for="ciudad">Ciudad:</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="esAdministrador" name="esAdministrador" th:field="*{esAdministrador}">
+                    <label class="form-check-label" for="esAdministrador">¿Es Administrador?</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-8">
+            <br/>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+    </form>
+    <h3 th:text="${info}"></h3>
+</main>
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="es">
+<head th:replace="~{plantillas/plantilla :: head}"></head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+<main class="container shadow-lg p-4 mb-5 bg-body-tertiary rounded">
+  <h1 class="text-center mb-4">Panel de Administración</h1>
+  <p class="text-center lead">Gestiona vehículos, monitorea reservas y revisa el rendimiento del negocio desde un solo lugar.</p>
+
+  <div class="row mt-5">
+    <!-- Mantenimiento de vehículos -->
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow-sm h-100 text-center">
+        <div class="card-body">
+          <i class="bi bi-tools display-4 text-warning mb-3"></i>
+          <h5 class="card-title">Mantenimiento de Autos</h5>
+          <p class="card-text">Envía autos a mantenimiento y gestiona su disponibilidad.</p>
+          <a th:href="@{/admin/maintenance}" class="btn btn-outline-warning">Gestionar</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ver reservas -->
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow-sm h-100 text-center">
+        <div class="card-body">
+          <i class="bi bi-journal-text display-4 text-primary mb-3"></i>
+          <h5 class="card-title">Reservas</h5>
+          <p class="card-text">Consulta todas las reservas realizadas por los clientes.</p>
+          <a th:href="@{/admin/reservations}" class="btn btn-outline-primary">Ver Reservas</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Métricas -->
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow-sm h-100 text-center">
+        <div class="card-body">
+          <i class="bi bi-graph-up display-4 text-success mb-3"></i>
+          <h5 class="card-title">Métricas de Desempeño</h5>
+          <p class="card-text">Visualiza estadísticas y rendimiento de la empresa.</p>
+          <a th:href="@{/admin/metrics}" class="btn btn-outline-success">Ver Métricas</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{plantillas/plantilla :: head}"></head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+
+<main class="container text-center shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+  <h1>Registro de Tarjeta</h1>
+
+  <form th:action="@{/recibir-payment}" th:object="${tarjeta}" method="post">
+    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+      Verifique los siguientes inconvenientes
+      <ul>
+        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+      </ul>
+    </div>
+
+    <!-- Nombre del Titular -->
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <div class="form-floating">
+          <input th:class="${#fields.hasErrors('nombreTitular')} ? 'form-control is-invalid' : 'form-control'"
+                 type="text" id="nombreTitular" name="nombreTitular" th:field="*{nombreTitular}" placeholder="Nombre del Titular">
+          <label for="nombreTitular">Nombre del Titular</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Número de Tarjeta -->
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <div class="form-floating">
+          <input th:class="${#fields.hasErrors('numeroTarjeta')} ? 'form-control is-invalid' : 'form-control'"
+                 type="text" id="numeroTarjeta" name="numeroTarjeta" th:field="*{numeroTarjeta}" placeholder="Número de Tarjeta">
+          <label for="numeroTarjeta">Número de Tarjeta</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- CVV -->
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <div class="form-floating">
+          <input th:class="${#fields.hasErrors('cvv')} ? 'form-control is-invalid' : 'form-control'"
+                 type="text" id="cvv" name="cvv" th:field="*{cvv}" placeholder="CVV">
+          <label for="cvv">CVV</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fecha de Expiración -->
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <div class="form-floating">
+          <input th:class="${#fields.hasErrors('fechaExpiracion')} ? 'form-control is-invalid' : 'form-control'"
+                 type="date" id="fechaExpiracion" name="fechaExpiracion" th:field="*{fechaExpiracion}">
+          <label for="fechaExpiracion">Fecha de Expiración</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón Guardar -->
+    <div class="col-8 mt-3">
+      <button type="submit" class="btn btn-primary">Guardar Tarjeta</button>
+    </div>
+  </form>
+  <h3 th:text="${info}"></h3>
+</main>
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+</body>
+</html>

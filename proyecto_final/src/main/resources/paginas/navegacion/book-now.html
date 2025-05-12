@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{plantillas/plantilla :: head}"></head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+
+<main class="container text-center shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+  <h1>Reserva tu automóvil</h1>
+
+  <!-- Tarjeta del automóvil -->
+  <div class="row justify-content-center my-4">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="row g-0">
+          <div class="col-md-5">
+            <img th:src="${automovil.imagenBase64}" class="img-fluid rounded-start" alt="Imagen del automóvil">
+          </div>
+          <div class="col-md-7">
+            <div class="card-body text-start">
+              <h4 class="card-title" th:text="${automovil.marca} + ' ' + ${automovil.modelo}"></h4>
+              <p class="card-text mb-2">
+                <strong>Precio por día:</strong> <span th:text="${automovil.precioDia} + ' MXN'"></span><br>
+                <strong>Placa:</strong> <span th:text="${automovil.numeroPlaca}"></span><br>
+                <strong>Transmisión:</strong> <span th:text="${automovil.transmision}"></span><br>
+                <strong>Combustible:</strong> <span th:text="${automovil.tipoCombustible}"></span><br>
+                <strong>Capacidad:</strong> <span th:text="${automovil.capacidadPersonas} + ' personas'"></span><br>
+                <strong>Kilometraje:</strong> <span th:text="${automovil.kilometraje} + ' km'"></span><br>
+                <strong>Carrocería:</strong> <span th:text="${automovil.carroceria}"></span><br>
+                <strong>Fabricación:</strong> <span th:text="${automovil.fechaFabricacion}"></span>
+              </p>
+              <span class="badge bg-success" th:if="${automovil.disponible}">Disponible</span>
+              <span class="badge bg-danger" th:if="${!automovil.disponible}">No disponible</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario de reserva -->
+  <form th:action="@{/reserva/recibir-reserva}" th:object="${reserva}" method="post">
+    <input type="hidden" th:field="*{vehiculo.vehiculo_id}" />
+
+    <div th:if="${#fields.hasErrors('*')}" class='alert alert-danger' role="alert">
+      Verifique los siguientes inconvenientes
+      <ul>
+        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+      </ul>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="form-floating mb-3">
+          <input th:class="${#fields.hasErrors('fechaInicio')}? 'form-control is-invalid' : 'form-control'"
+                 type="date" id="fechaInicio" name="fechaInicio" th:field="*{fechaInicio}">
+          <label for="fechaInicio">Fecha de Inicio</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-floating mb-3">
+          <input th:class="${#fields.hasErrors('fechaFin')}? 'form-control is-invalid' : 'form-control'"
+                 type="date" id="fechaFin" name="fechaFin" th:field="*{fechaFin}">
+          <label for="fechaFin">Fecha de Fin</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mb-3">
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="asientoInfantil" th:field="*{asientoInfantil}">
+          <label class="form-check-label" for="asientoInfantil">¿Asiento Infantil?</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="asientoElevador" th:field="*{asientoElevador}">
+          <label class="form-check-label" for="asientoElevador">¿Asiento Elevador?</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="conductoresAdicionales" th:field="*{conductoresAdicionales}">
+          <label class="form-check-label" for="conductoresAdicionales">¿Conductores Adicionales?</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary">Reservar automóvil</button>
+    </div>
+  </form>
+</main>
+
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+</body>
+</html>

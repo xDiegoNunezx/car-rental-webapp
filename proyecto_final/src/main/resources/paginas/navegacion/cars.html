@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{plantillas/plantilla :: head}"></head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+<main class="container text-center shadow-lg p-3 pb-5 bg-body-tertiary rounded">
+  <div class="text-center mb-4">
+    <h1 th:text="${contenido}">Vehículos Disponibles</h1>
+    <p class="lead text-muted mx-auto" style="max-width: 800px;">Carros disponibles</p>
+  </div>
+
+  <!-- Listado de vehículos -->
+  <div class="row justify-content-center row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 mt-3" th:if="${!vehiculos.isEmpty()}">
+    <div class="col d-flex" th:each="vehiculo : ${vehiculos}">
+      <div class="card h-100 w-100 shadow-sm hover-shadow">
+        <!-- Mostrar imagen del vehículo -->
+        <div class="card-img-top overflow-hidden" style="height: 200px;">
+          <img th:if="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+               th:src="${vehiculo.imagenBase64}"
+               class="w-100 h-100 object-fit-cover" alt="Imagen del vehículo">
+          <img th:unless="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+               th:src="@{/images/civic.png}"
+               class="w-100 h-100 object-fit-cover" alt="Imagen por defecto">
+        </div>
+
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title fw-bold" th:text="${vehiculo.marca + ' ' + vehiculo.modelo}"></h5>
+          <ul class="list-group list-group-flush flex-grow-1">
+            <li class="list-group-item">
+              <strong>Placa:</strong> <span th:text="${vehiculo.numeroPlaca}"></span>
+            </li>
+            <li class="list-group-item">
+              <strong>Capacidad:</strong> <span th:text="${vehiculo.capacidadPersonas + ' personas'}"></span>
+            </li>
+            <li class="list-group-item">
+              <strong>Precio por día:</strong> <span class="text-success fw-bold" th:text="${'$' + #numbers.formatDecimal(vehiculo.precioDia, 1, 2)}"></span>
+            </li>
+            <li class="list-group-item">
+              <strong>Tipo:</strong> <span th:text="${vehiculo.carroceria}"></span>
+            </li>
+          </ul>
+        </div>
+        <div class="card-footer bg-transparent border-top-0 pb-3">
+          <a th:href="@{'/reserva/book-now?idVehiculo=' + ${vehiculo.vehiculoId} + '&fechaInicio=' + ${fechauno} + '&fechaFin=' + ${fechados}}"
+             class="btn btn-primary w-100 py-2 fw-bold">
+            Reservar ahora
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje si no hay vehículos -->
+  <div class="alert alert-warning mt-5 text-center" th:if="${vehiculos.isEmpty()}" style="max-width: 600px; margin: 0 auto;">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    No hay vehículos disponibles en este momento.
+  </div>
+
+  <div class="mb-5"></div>
+
+  <!-- Paginación -->
+  <nav th:replace="~{plantillas/pag-nav::paginador}"></nav>
+</main>
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+</body>
+</html>

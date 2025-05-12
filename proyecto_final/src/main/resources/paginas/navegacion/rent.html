@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{plantillas/plantilla :: head}"></head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+
+<main class="container-fluid py-4">
+  <!-- Título principal -->
+  <div class="text-center mb-4">
+    <h1>Renta de Autos</h1>
+    <p class="lead text-muted">Busca y filtra los vehículos disponibles según tus necesidades</p>
+  </div>
+
+  <!-- Fila principal con formulario y resultados -->
+  <div class="row">
+
+    <!-- Barra lateral izquierda con filtros -->
+    <aside class="col-md-3 mb-4">
+      <div class="card shadow-sm p-3">
+        <h5 class="mb-3">Filtros</h5>
+        <form method="post" th:action="@{/}">
+          <div class="mb-3">
+            <label for="marca" class="form-label">Marca</label>
+            <input type="text" class="form-control" id="marca" name="marca">
+          </div>
+          <div class="mb-3">
+            <label for="capacidad" class="form-label">Capacidad (mínimo)</label>
+            <input type="number" class="form-control" id="capacidad" name="capacidad" min="1">
+          </div>
+          <div class="mb-3">
+            <label for="carroceria" class="form-label">Tipo de carrocería</label>
+            <input type="text" class="form-control" id="carroceria" name="carroceria">
+          </div>
+          <button type="submit" class="btn btn-secondary w-100" disabled>Aplicar filtros</button>
+        </form>
+      </div>
+    </aside>
+
+    <!-- Sección principal con formulario y vehículos -->
+    <section class="col-md-9">
+      <!-- Formulario de búsqueda -->
+      <div class="card mb-4 shadow-sm p-4">
+        <h5 class="mb-3">Buscar por fecha</h5>
+        <form th:action="@{/rent/recibir-fechas}" method="post" class="row g-3">
+          <div class="col-md-6">
+            <label for="fechauno" class="form-label">Fecha de inicio</label>
+            <input
+                    type="date"
+                    class="form-control"
+                    id="fechauno"
+                    name="fechauno"
+                    th:value="${fechauno}"
+                    th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                    required>
+          </div>
+          <div class="col-md-6">
+            <label for="fechados" class="form-label">Fecha de entrega</label>
+            <input
+                    type="date"
+                    class="form-control"
+                    id="fechados"
+                    name="fechados"
+                    th:value="${fechados}"
+                    th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                    required>
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Resultados de búsqueda de vehículos -->
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${!vehiculos.isEmpty()}">
+        <div class="col d-flex" th:each="vehiculo : ${vehiculos}">
+          <div class="card h-100 w-100 shadow-sm hover-shadow">
+            <div class="card-img-top overflow-hidden" style="height: 200px;">
+              <img th:if="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+                   th:src="${vehiculo.imagenBase64}" class="w-100 h-100 object-fit-cover" alt="Imagen del vehículo">
+              <img th:unless="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+                   th:src="@{/images/civic.png}" class="w-100 h-100 object-fit-cover" alt="Imagen por defecto">
+            </div>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold" th:text="${vehiculo.marca + ' ' + vehiculo.modelo}"></h5>
+              <ul class="list-group list-group-flush flex-grow-1">
+                <li class="list-group-item">
+                  <strong>Placa:</strong> <span th:text="${vehiculo.numeroPlaca}"></span>
+                </li>
+                <li class="list-group-item">
+                  <strong>Capacidad:</strong> <span th:text="${vehiculo.capacidadPersonas + ' personas'}"></span>
+                </li>
+                <li class="list-group-item">
+                  <strong>Precio por día:</strong> <span class="text-success fw-bold" th:text="${'$' + #numbers.formatDecimal(vehiculo.precioDia, 1, 2)}"></span>
+                </li>
+                <li class="list-group-item">
+                  <strong>Tipo:</strong> <span th:text="${vehiculo.carroceria}"></span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer bg-transparent border-top-0 pb-3">
+              <a th:href="@{'/reserva/book-now?idVehiculo=' + ${vehiculo.vehiculoId} + '&fechaInicio=' + ${fechauno} + '&fechaFin=' + ${fechados}}"
+                 class="btn btn-primary w-100 py-2 fw-bold">
+                Reservar ahora
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje si no hay vehículos -->
+      <div class="alert alert-warning mt-5 text-center" th:if="${vehiculos.isEmpty()}" style="max-width: 600px; margin: 0 auto;">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        No hay vehículos disponibles en este momento.
+      </div>
+
+      <div class="mb-5"></div>
+
+      <!-- Paginación -->
+      <nav class="mt-4" th:replace="~{plantillas/pag-nav::paginador}"></nav>
+    </section>
+  </div>
+</main>
+
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fechaInicioInput = document.getElementById("fechauno");
+    const fechaFinInput = document.getElementById("fechados");
+
+    const today = new Date().toISOString().split("T")[0];
+    fechaInicioInput.setAttribute("min", today);
+    fechaFinInput.setAttribute("min", today);
+
+    fechaInicioInput.addEventListener("change", function () {
+      const fechaInicio = this.value;
+      fechaFinInput.setAttribute("min", fechaInicio);
+
+      if (fechaFinInput.value && fechaFinInput.value < fechaInicio) {
+        fechaFinInput.value = fechaInicio;
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

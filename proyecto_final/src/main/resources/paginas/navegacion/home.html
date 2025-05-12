@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="es">
+<head th:replace="~{plantillas/plantilla :: head}"></head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+<main class="container shadow-lg p-4 mb-5 bg-body-tertiary rounded">
+  <h1 class="text-center mb-4">Bienvenido a Car Rental</h1>
+  <p class="lead text-center">¡Tu viaje comienza aquí! Renta un auto al instante con la mejor calidad, seguridad y al mejor precio.</p>
+
+  <div class="text-center mt-4">
+    <a th:href="@{/rent}" class="btn btn-primary btn-lg me-2">¡Rentar Ahora!</a>
+    <a th:href="@{/about-us}" class="btn btn-outline-secondary btn-lg">Conócenos</a>
+  </div>
+
+  <hr class="my-5">
+
+  <div class="row text-center">
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body">
+          <i class="bi bi-car-front-fill display-4 text-primary mb-3"></i>
+          <h5 class="card-title">+500 Vehículos Disponibles</h5>
+          <p class="card-text">Contamos con una flota moderna y diversa para todas tus necesidades.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body">
+          <i class="bi bi-emoji-smile-fill display-4 text-success mb-3"></i>
+          <h5 class="card-title">98% Clientes Satisfechos</h5>
+          <p class="card-text">Miles de usuarios han confiado en nosotros para sus viajes.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body">
+          <i class="bi bi-globe2 display-4 text-info mb-3"></i>
+          <h5 class="card-title">Cobertura Nacional</h5>
+          <p class="card-text">Renta y devuelve tu auto en cualquiera de nuestras sucursales en todo el país.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  <div class="text-center">
+    <h4 class="mb-3">¿Primera vez con nosotros?</h4>
+    <p>¡Explora nuestras preguntas frecuentes o contáctanos para ayudarte!</p>
+    <a th:href="@{/faq}" class="btn btn-outline-primary me-2">Ver FAQ</a>
+    <a th:href="@{/contact-us}" class="btn btn-outline-secondary">Contáctanos</a>
+  </div>
+</main>
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+</body>
+</html>

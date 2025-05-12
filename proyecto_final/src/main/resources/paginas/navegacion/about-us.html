@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="es">
+<head th:replace="~{plantillas/plantilla :: head}"></head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+<main class="container shadow-lg p-4 mb-5 bg-body-tertiary rounded">
+  <h1 class="text-center mb-4">Sobre Nosotros</h1>
+
+  <section class="mb-5">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <img th:src="@{/image/about_us_team.jpg}" alt="Nuestro equipo" class="img-fluid rounded shadow-sm">
+      </div>
+      <div class="col-md-6">
+        <p><strong>Car Rental</strong> nació en 2015 con la misión de ofrecer un servicio de renta de automóviles accesible, confiable y moderno para todas las personas en México. Desde nuestros inicios en Guadalajara con una pequeña flota de 10 vehículos, hemos crecido hasta operar en más de 20 ciudades a nivel nacional.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-5 text-center">
+    <h3 class="mb-3">Nuestra Visión</h3>
+    <p>Ser la empresa líder en soluciones de movilidad en Latinoamérica, ofreciendo experiencias de renta seguras, ágiles y con un enfoque centrado en el cliente.</p>
+  </section>
+
+  <section class="mb-5">
+    <h3 class="text-center mb-4">Nuestros Valores</h3>
+    <div class="row text-center">
+      <div class="col-md-4 mb-3">
+        <i class="bi bi-shield-check" style="font-size: 2rem; color: #0d6efd;"></i>
+        <h5>Compromiso</h5>
+        <p>Brindamos un servicio excepcional en cada interacción.</p>
+      </div>
+      <div class="col-md-4 mb-3">
+        <i class="bi bi-lightbulb" style="font-size: 2rem; color: #ffc107;"></i>
+        <h5>Innovación</h5>
+        <p>Mejoramos continuamente con tecnología de punta.</p>
+      </div>
+      <div class="col-md-4 mb-3">
+        <i class="bi bi-ev-station" style="font-size: 2rem; color: #28a745;"></i>
+        <h5>Sustentabilidad</h5>
+        <p>Invertimos en vehículos híbridos y eléctricos.</p>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col-md-6 mb-3">
+        <i class="bi bi-eye" style="font-size: 2rem; color: #6f42c1;"></i>
+        <h5>Transparencia</h5>
+        <p>Tarifas claras, sin cargos ocultos.</p>
+      </div>
+      <div class="col-md-6 mb-3">
+        <i class="bi bi-check2-circle" style="font-size: 2rem; color: #fd7e14;"></i>
+        <h5>Seguridad</h5>
+        <p>Revisión constante de cada vehículo en nuestra flota.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-5">
+    <h3 class="text-center mb-4">Nuestra Historia</h3>
+    <ul class="timeline list-unstyled">
+      <li class="mb-4">
+        <h6><strong>2015</strong> - Fundación en Guadalajara</h6>
+        <p>Comenzamos con 10 autos y una oficina pequeña.</p>
+      </li>
+      <li class="mb-4">
+        <h6><strong>2017</strong> - Expansión a Ciudad de México y Monterrey</h6>
+        <p>Duplicamos nuestra flota y abrimos dos nuevas sucursales.</p>
+      </li>
+      <li class="mb-4">
+        <h6><strong>2020</strong> - Digitalización total</h6>
+        <p>Lanzamos nuestra plataforma web y app para rentar desde el celular.</p>
+      </li>
+      <li class="mb-4">
+        <h6><strong>2023</strong> - Flota verde</h6>
+        <p>Incluimos los primeros autos eléctricos e híbridos en nuestro catálogo.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="text-center">
+    <h4>¿Listo para tu próxima aventura?</h4>
+    <p class="mb-3">Con Car Rental, solo necesitas las llaves y el camino.</p>
+    <a th:href="@{/rent}" class="btn btn-primary btn-lg">¡Reserva ahora!</a>
+  </section>
+</main>
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+</body>
+</html>

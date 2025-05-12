@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/iconos/bootstrap-icons.css}" rel="stylesheet">
+    <link th:href="@{/tema/miestilo.css}" rel="stylesheet">
+    <title>Car Rental</title>
+</head>
+<body>
+<header th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container">
+            <a th:href="@{/}" class="navbar-brand">Car Rental</a>
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#menu"
+                    aria-controls="menu"
+                    aria-expanded="false"
+                    aria-label="Mostrar / Ocultar Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!--Menu-->
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav me-auto mb-1 mb-lg-0">
+                    <li class="nav-item"><a th:href="@{/}" class="nav-link">Inicio</a></li>
+                    <li class="nav-item"><a th:href="@{/rent}" class="nav-link">Renta</a></li>
+                    <li class="nav-item"><a th:href="@{/cars}" class="nav-link">Automóviles</a></li>
+                    <li class="nav-item"><a th:href="@{/about-us}" class="nav-link">Nosotros</a></li>
+                    <li class="nav-item"><a th:href="@{/contact-us}" class="nav-link">Contacto</a></li>
+                    <li class="nav-item"><a th:href="@{/faq}" class="nav-link">FAQ</a></li>
+                    <li sec:authorize="hasRole('USER')"  class="nav-item"><a th:href="@{/profile}" class="nav-link">Mi perfil</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"  class="nav-item"><a th:href="@{/admin}" class="nav-link">Administracion</a></li>
+                    <li sec:authorize="!isAuthenticated()" class="nav-item"><a th:href="@{/login}" class="nav-link">Login</a></li>
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <form class="link" th:action="@{/doLogout}" method="post">
+                            <input class="nav-link" type="submit" value="Logout"/>
+                        </form></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+</body>
+<footer th:fragment="footer">
+    <div class="container text-center">
+        <br/> <img th:src="@{/image/autos.png}" height="150" width="500"/>
+        <p>Car Rental Service - All Rights Reserved</p>
+    </div>
+    <script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</footer>
+</html>
