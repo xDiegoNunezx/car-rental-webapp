@@ -13,7 +13,7 @@
 <header th:fragment="header">
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container">
-            <a th:href="@{/}" class="navbar-brand">Car Rental</a>
+            <a th:href="@{/public}" class="navbar-brand">Car Rental</a>
             <button class="navbar-toggler"
                     type="button"
                     data-bs-toggle="collapse"
@@ -26,15 +26,15 @@
             <!--Menu-->
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav me-auto mb-1 mb-lg-0">
-                    <li class="nav-item"><a th:href="@{/}" class="nav-link">Inicio</a></li>
-                    <li class="nav-item"><a th:href="@{/rent}" class="nav-link">Renta</a></li>
-                    <li class="nav-item"><a th:href="@{/cars}" class="nav-link">Automóviles</a></li>
-                    <li class="nav-item"><a th:href="@{/about-us}" class="nav-link">Nosotros</a></li>
-                    <li class="nav-item"><a th:href="@{/contact-us}" class="nav-link">Contacto</a></li>
-                    <li class="nav-item"><a th:href="@{/faq}" class="nav-link">FAQ</a></li>
-                    <li sec:authorize="hasRole('USER')"  class="nav-item"><a th:href="@{/profile}" class="nav-link">Mi perfil</a></li>
+                    <li class="nav-item"><a th:href="@{/public}" class="nav-link">Inicio</a></li>
+                    <li class="nav-item"><a th:href="@{/public/rent}" class="nav-link">Renta</a></li>
+                    <li class="nav-item"><a th:href="@{/public/cars}" class="nav-link">Automóviles</a></li>
+                    <li class="nav-item"><a th:href="@{/public/about-us}" class="nav-link">Nosotros</a></li>
+                    <li class="nav-item"><a th:href="@{/public/contact-us}" class="nav-link">Contacto</a></li>
+                    <li class="nav-item"><a th:href="@{/public/faq}" class="nav-link">FAQ</a></li>
+                    <li sec:authorize="hasRole('USER')"  class="nav-item"><a th:href="@{/user/profile}" class="nav-link">Mi perfil</a></li>
                     <li sec:authorize="hasRole('ADMIN')"  class="nav-item"><a th:href="@{/admin}" class="nav-link">Administracion</a></li>
-                    <li sec:authorize="!isAuthenticated()" class="nav-item"><a th:href="@{/login}" class="nav-link">Login</a></li>
+                    <li sec:authorize="!isAuthenticated()" class="nav-item"><a th:href="@{/auth/login}" class="nav-link">Login</a></li>
                     <li sec:authorize="isAuthenticated()" class="nav-item">
                         <form class="link" th:action="@{/doLogout}" method="post">
                             <input class="nav-link" type="submit" value="Logout"/>

@@ -18,7 +18,7 @@
     <aside class="col-md-3 mb-4">
       <div class="card shadow-sm p-3">
         <h5 class="mb-3">Filtros</h5>
-        <form method="post" th:action="@{/}">
+        <form method="post" th:action="@{/public}">
           <div class="mb-3">
             <label for="marca" class="form-label">Marca</label>
             <input type="text" class="form-control" id="marca" name="marca">
@@ -41,7 +41,7 @@
       <!-- Formulario de búsqueda -->
       <div class="card mb-4 shadow-sm p-4">
         <h5 class="mb-3">Buscar por fecha</h5>
-        <form th:action="@{/rent/recibir-fechas}" method="post" class="row g-3">
+        <form th:action="@{/public/rent/recibir-fechas}" method="post" class="row g-3">
           <div class="col-md-6">
             <label for="fechauno" class="form-label">Fecha de inicio</label>
             <input
@@ -98,7 +98,7 @@
               </ul>
             </div>
             <div class="card-footer bg-transparent border-top-0 pb-3">
-              <a th:href="@{'/reserva/book-now?idVehiculo=' + ${vehiculo.vehiculoId} + '&fechaInicio=' + ${fechauno} + '&fechaFin=' + ${fechados}}"
+              <a th:href="@{'/user/reserva/book-now?idVehiculo=' + ${vehiculo.vehiculoId} + '&fechaInicio=' + ${fechauno} + '&fechaFin=' + ${fechados}}"
                  class="btn btn-primary w-100 py-2 fw-bold">
                 Reservar ahora
               </a>

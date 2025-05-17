@@ -38,7 +38,7 @@
   </div>
 
   <!-- Formulario de reserva -->
-  <form th:action="@{/reserva/recibir-reserva}" th:object="${reserva}" method="post">
+  <form th:action="@{/user/reserva/recibir-reserva}" th:object="${reserva}" method="post">
     <input type="hidden" th:field="*{vehiculo.vehiculo_id}" />
 
     <div th:if="${#fields.hasErrors('*')}" class='alert alert-danger' role="alert">

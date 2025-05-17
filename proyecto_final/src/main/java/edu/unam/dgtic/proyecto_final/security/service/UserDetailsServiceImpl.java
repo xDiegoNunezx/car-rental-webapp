@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+/*
 @Slf4j
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -38,3 +38,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new User(userName, password, authorities);
     }
 }
+*/

@@ -35,20 +35,18 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/css/**", "/favicon.ico", "/", "/index", "/bootstrap/**", "/iconos/**", "/tema/**", "/image/**").permitAll()
+                        .requestMatchers("/css/**", "/favicon.ico", "/**", "/index", "/bootstrap/**", "/iconos/**", "/tema/**", "/image/**").permitAll()
                         .requestMatchers("/profile").hasRole("USER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/profile").denyAll()
-                        .requestMatchers("/admin/**").denyAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-                        .loginPage("/login") //new
+                        .loginPage("/auth/login") //new
                         //.usernameParameter("email")
                         //.passwordParameter("pass")
                         //.loginProcessingUrl("/doLogin")
-                        .defaultSuccessUrl("/")
-                        .successForwardUrl("/login_success_handler")
+                        .defaultSuccessUrl("/public")
+                        .successForwardUrl("/auth/login_success_handler")
                         //.failureForwardUrl("/login_failure_handler")
                         /*.successHandler(new AuthenticationSuccessHandler() {
                             @Override
@@ -68,7 +66,7 @@ public class SecurityConfiguration {
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/doLogout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/public")
                         /*.logoutSuccessHandler(new LogoutSuccessHandler() {
                             @Override
                             public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -78,8 +76,8 @@ public class SecurityConfiguration {
                             }
                         })*/
                         .invalidateHttpSession(true))
-                .exceptionHandling(exc -> exc
-                        .accessDeniedPage("/access-denied")); // Página para acceso denegado
+                        .exceptionHandling(exc ->
+                                exc.accessDeniedPage("/access-denied")); // Página para acceso denegado
         //.csrf(csrf -> csrf.disable())
         ;
         return http.build();

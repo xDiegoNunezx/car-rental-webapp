@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+/*
 @Component
 @AllArgsConstructor
 public class AuthenticationProviderImpl implements AuthenticationProvider {
@@ -41,4 +41,4 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
-}
+}*/
