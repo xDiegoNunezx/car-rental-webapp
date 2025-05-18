@@ -1,5 +1,6 @@
 package edu.unam.dgtic.proyecto_final.system.controller;
 
+import edu.unam.dgtic.proyecto_final.security.model.UserDetailsImpl;
 import edu.unam.dgtic.proyecto_final.system.model.Cliente;
 import edu.unam.dgtic.proyecto_final.system.model.Reserva;
 import edu.unam.dgtic.proyecto_final.system.model.Vehiculo;
@@ -9,6 +10,7 @@ import edu.unam.dgtic.proyecto_final.system.service.VehiculoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,9 +37,22 @@ public class UserController {
     @GetMapping("/profile")
     public String profile(@RequestParam(name = "page", defaultValue = "0") int page,
                           Model modelo,
-                          SessionStatus status) {
-        List<Reserva> reservas = reservaService.obtenerReservasDeCliente(1L);
+                          SessionStatus status,
+                          Authentication authentication
+    ) {
+        Optional<Cliente> clienteOpt = clienteService.obtenerPorEmail(authentication.getName());
+
+        if (!clienteOpt.isPresent()) {
+            modelo.addAttribute("error", "No se encontró información del cliente");
+            return "/public";
+        }
+
+        Cliente cliente = clienteOpt.get();
+        Long usuarioId = cliente.getId();
+
+        List<Reserva> reservas = reservaService.obtenerReservasDeCliente(usuarioId);
         modelo.addAttribute("reservas", reservas);
+
         return "navegacion/profile";
     }
 

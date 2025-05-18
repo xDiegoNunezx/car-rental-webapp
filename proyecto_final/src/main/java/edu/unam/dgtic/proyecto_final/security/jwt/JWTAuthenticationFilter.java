@@ -50,14 +50,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                         .map(m -> new SimpleGrantedAuthority(m.get("authority")))
                         .collect(Collectors.toSet());
                 //String username = tokenProvider.getIssuer(jwt);
-                String username = tokenProvider.getFullName(jwt);
+                String email = tokenProvider.getIssuer(jwt);
+
                 CredentialsDTO credentials = CredentialsDTO.builder()
                         .sub(tokenProvider.getSubject(jwt)).aud(tokenProvider.getAudience(jwt))
                         .exp(tokenProvider.getTokenExpiryFromJWT(jwt).getTime())
                         .iat(tokenProvider.getTokenIatFromJWT(jwt).getTime())
                         .build();
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        username, credentials, simpleGrantedAuthorities);
+                        email, credentials, simpleGrantedAuthorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
