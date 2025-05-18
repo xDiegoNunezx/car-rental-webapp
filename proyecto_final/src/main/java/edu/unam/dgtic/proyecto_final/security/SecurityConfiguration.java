@@ -35,8 +35,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/css/**", "/favicon.ico", "/**", "/index", "/bootstrap/**", "/iconos/**", "/tema/**", "/image/**").permitAll()
-                        .requestMatchers("/profile").hasRole("USER")
+                        .requestMatchers("/css/**", "/favicon.ico", "/public/**", "/auth/**", "/index", "/bootstrap/**", "/iconos/**", "/tema/**", "/image/**").permitAll()
+                        .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -77,7 +77,7 @@ public class SecurityConfiguration {
                         })*/
                         .invalidateHttpSession(true))
                         .exceptionHandling(exc ->
-                                exc.accessDeniedPage("/access-denied")); // Página para acceso denegado
+                                exc.accessDeniedPage("/auth/access-denied")); // Página para acceso denegado
         //.csrf(csrf -> csrf.disable())
         ;
         return http.build();

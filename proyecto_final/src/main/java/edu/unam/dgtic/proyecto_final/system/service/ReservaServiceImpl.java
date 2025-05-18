@@ -1,14 +1,12 @@
 package edu.unam.dgtic.proyecto_final.system.service;
 
+import edu.unam.dgtic.proyecto_final.system.model.Cliente;
 import edu.unam.dgtic.proyecto_final.system.model.Reserva;
-import edu.unam.dgtic.proyecto_final.system.model.Usuario;
 import edu.unam.dgtic.proyecto_final.system.model.Vehiculo;
+import edu.unam.dgtic.proyecto_final.system.repository.ClienteRepository;
 import edu.unam.dgtic.proyecto_final.system.repository.ReservaRepository;
-import edu.unam.dgtic.proyecto_final.system.repository.UsuarioRepository;
 import edu.unam.dgtic.proyecto_final.system.repository.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,26 +19,27 @@ public class ReservaServiceImpl implements ReservaService {
     @Autowired
     private ReservaRepository reservaRepository;
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private ClienteRepository clienteRepository;
     @Autowired
     private VehiculoRepository vehiculoRepository;
 
     @Override
-    public List<Reserva> obtenerReservasDeUsuario(Long usuarioId) {
-        return reservaRepository.findByUsuarioUsuarioId(usuarioId);
+    public List<Reserva> obtenerReservasDeCliente(Long clienteId) {
+        return reservaRepository.findByCliente_Id(clienteId);
     }
 
     @Override
-    public List<Reserva> obtenerReservasActivas(Long usuarioId) {
-        return reservaRepository.findReservasActivasByUsuarioId(usuarioId);
+    public List<Reserva> obtenerReservasActivasDeCliente(Long clienteId) {
+        return reservaRepository.findReservasActivasByClienteId(clienteId);
     }
 
     @Override
     @Transactional
-    public Reserva crearReserva(Long usuarioId, Long vehiculoId, LocalDate inicio, LocalDate fin,
+    public Reserva crearReserva(Long clienteId, Long vehiculoId, LocalDate inicio, LocalDate fin,
                                 boolean asientoInfantil, boolean asientoElevador, boolean conductoresAdicionales) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
+        Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
         Vehiculo vehiculo = vehiculoRepository.findById(vehiculoId)
                 .orElseThrow(() -> new RuntimeException("Vehículo no encontrado"));
 
@@ -53,14 +52,14 @@ public class ReservaServiceImpl implements ReservaService {
         }
 
         long dias = ChronoUnit.DAYS.between(inicio, fin);
-        float total = dias * vehiculo.getPrecioDia();
+        double total = dias * vehiculo.getPrecioDia();
 
         Reserva reserva = Reserva.builder()
                 .fechaInicio(inicio)
                 .fechaFin(fin)
                 .fechaReserva(LocalDate.now())
                 .vehiculo(vehiculo)
-                .usuario(usuario)
+                .cliente(cliente)
                 .asientoInfantil(asientoInfantil)
                 .asientoElevador(asientoElevador)
                 .conductoresAdicionales(conductoresAdicionales)

@@ -25,11 +25,13 @@
                 <strong>Combustible:</strong> <span th:text="${automovil.tipoCombustible}"></span><br>
                 <strong>Capacidad:</strong> <span th:text="${automovil.capacidadPersonas} + ' personas'"></span><br>
                 <strong>Kilometraje:</strong> <span th:text="${automovil.kilometraje} + ' km'"></span><br>
-                <strong>Carrocería:</strong> <span th:text="${automovil.carroceria}"></span><br>
+                <strong>Carrocería:</strong> <span th:text="${automovil.tipoCarroceria}"></span><br>
                 <strong>Fabricación:</strong> <span th:text="${automovil.fechaFabricacion}"></span>
               </p>
-              <span class="badge bg-success" th:if="${automovil.disponible}">Disponible</span>
-              <span class="badge bg-danger" th:if="${!automovil.disponible}">No disponible</span>
+              <span class="badge"
+                    th:classappend="${automovil.disponibilidad == 'Disponible'} ? 'bg-success' : 'bg-danger'"
+                    th:text="${automovil.disponibilidad == 'Disponible'} ? 'Disponible' : 'No disponible'">
+              </span>
             </div>
           </div>
         </div>
@@ -39,7 +41,7 @@
 
   <!-- Formulario de reserva -->
   <form th:action="@{/user/reserva/recibir-reserva}" th:object="${reserva}" method="post">
-    <input type="hidden" th:field="*{vehiculo.vehiculo_id}" />
+    <input type="hidden" th:field="*{vehiculo.id}" />
 
     <div th:if="${#fields.hasErrors('*')}" class='alert alert-danger' role="alert">
       Verifique los siguientes inconvenientes

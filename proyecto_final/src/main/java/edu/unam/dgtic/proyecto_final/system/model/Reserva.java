@@ -20,38 +20,53 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "reserva")
+@Table(name = "reservas")
 public class Reserva {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reservaId;
+    private Long id;
+
     @NotNull(message = "La fecha no debe estar vacía")
     @FutureOrPresent(message = "La fecha de inicio no puede ser en el pasado")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
+
     @NotNull(message = "La fecha no debe estar vacía")
     @Future(message = "La fecha de inicio no puede ser en el pasado ni hoy")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "fecha_fin")
     private LocalDate fechaFin;
+
     @NotNull(message = "El asiento infantil no debe ser nulo")
+    @Column(name = "asiento_infantil")
     private boolean asientoInfantil;
+
     @NotNull(message = "El asiento Elevador no debe ser nulo")
+    @Column(name = "asiento_elevador")
     private boolean asientoElevador;
-    @NotNull(message = "Condcutores adicionales no debe ser nulo")
+
+    @NotNull(message = "Conductores adicionales no debe ser nulo")
+    @Column(name = "conductores_adicionales")
     private boolean conductoresAdicionales;
+
     @NotNull(message = "El pago total no debe ser nulo")
-    private float pagoTotal;
-    @NotNull(message = "La fecha de reserva no debe estar vacíaa")
+    @Column(name = "pago_total")
+    private double pagoTotal;
+
+    @NotNull(message = "La fecha de reserva no debe estar vacía")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "fecha_reserva", nullable = false)
     private LocalDate fechaReserva;
+
     @NotNull(message = "El estatus de cancelada no debe estar vacío")
     private boolean cancelada;
 
     @ManyToOne
-    @JoinColumn(name = "vehiculoId", nullable = false)
+    @JoinColumn(name = "vehiculo_id", nullable = false)
     private Vehiculo vehiculo;
 
     @ManyToOne
-    @JoinColumn(name = "usuarioID", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
 }

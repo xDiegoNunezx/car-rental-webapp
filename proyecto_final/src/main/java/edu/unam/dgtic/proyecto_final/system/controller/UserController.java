@@ -1,11 +1,12 @@
 package edu.unam.dgtic.proyecto_final.system.controller;
 
+import edu.unam.dgtic.proyecto_final.system.model.Cliente;
 import edu.unam.dgtic.proyecto_final.system.model.Reserva;
 import edu.unam.dgtic.proyecto_final.system.model.Usuario;
 import edu.unam.dgtic.proyecto_final.system.model.Vehiculo;
 import edu.unam.dgtic.proyecto_final.system.model.dto.VehiculoDto;
+import edu.unam.dgtic.proyecto_final.system.service.ClienteService;
 import edu.unam.dgtic.proyecto_final.system.service.ReservaService;
-import edu.unam.dgtic.proyecto_final.system.service.UsuarioService;
 import edu.unam.dgtic.proyecto_final.system.service.VehiculoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    UsuarioService usuarioService;
+    ClienteService clienteService;
     @Autowired
     ReservaService reservaService;
     @Autowired
@@ -42,16 +43,15 @@ public class UserController {
     public String profile(@RequestParam(name = "page", defaultValue = "0") int page,
                           Model modelo,
                           SessionStatus status) {
-        List<Reserva> reservas = reservaService.obtenerReservasDeUsuario(1L);
+        List<Reserva> reservas = reservaService.obtenerReservasDeCliente(1L);
         modelo.addAttribute("reservas", reservas);
         return "navegacion/profile";
     }
 
-
     @GetMapping("/perfil/{usuarioId}")
     public String verPerfil(@PathVariable Long usuarioId, Model model) {
-        Optional<Usuario> usuario = usuarioService.obtenerPorId(usuarioId);
-        usuario.ifPresent(u -> model.addAttribute("usuario", u));
+        Optional<Cliente> cliente = clienteService.obtenerPorId(usuarioId);
+        cliente.ifPresent(c -> model.addAttribute("cliente", c));
         return "perfil_usuario"; // templates/perfil_usuario.html
     }
 
@@ -75,7 +75,7 @@ public class UserController {
         reserva.setVehiculo(vehiculo);
 
         model.addAttribute("reserva", reserva);
-        model.addAttribute("automovil", toDto(vehiculo));
+        model.addAttribute("automovil", vehiculo.toDto());
         return "navegacion/book-now";
     }
 
@@ -85,8 +85,9 @@ public class UserController {
             BindingResult bindingResult,
             Model model
     ) {
-        Vehiculo vehiculo = vehiculoService.obtenerPorId(reserva.getVehiculo().getVehiculo_id()).get();
-        model.addAttribute("automovil", toDto(vehiculo));
+        Vehiculo vehiculo = vehiculoService.obtenerPorId(reserva.getVehiculo().getId()).get();
+
+        model.addAttribute("automovil", vehiculo.toDto());
         if (bindingResult.hasErrors()) {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 System.out.println(error.getDefaultMessage());
@@ -99,7 +100,7 @@ public class UserController {
         try {
             Reserva nuevaReserva = reservaService.crearReserva(
                     1L,
-                    reserva.getVehiculo().getVehiculo_id(),
+                    reserva.getVehiculo().getId(),
                     reserva.getFechaInicio(),
                     reserva.getFechaFin(),
                     reserva.isAsientoInfantil(),
@@ -109,43 +110,10 @@ public class UserController {
             model.addAttribute("reserva", nuevaReserva);
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
-            bindingResult.rejectValue("reservaId","reservaId","Registro duplicado");
+            bindingResult.rejectValue("id","id","Registro duplicado");
             return "navegacion/book-now";
         }
 
         return "redirect:/user/profile";
-    }
-
-    public VehiculoDto toDto(Vehiculo vehiculo) {
-        VehiculoDto dto = new VehiculoDto();
-
-        dto.setVehiculoId(vehiculo.getVehiculo_id());
-        dto.setNumeroPlaca(vehiculo.getNumeroPlaca());
-        dto.setModelo(vehiculo.getModelo());
-        dto.setFechaFabricacion(vehiculo.getFechaFabricacion());
-        dto.setKilometraje(vehiculo.getKilometraje());
-        dto.setCapacidadPersonas(vehiculo.getCapacidadPersonas());
-        dto.setPrecioDia(vehiculo.getPrecioDia());
-        dto.setMarca(vehiculo.getMarca());
-        dto.setTipoCombustible(vehiculo.getTipoCombustible());
-        dto.setTransmision(vehiculo.getTransmision());
-        dto.setCarroceria(vehiculo.getCarroceria());
-        dto.setDisponible(vehiculo.getDisponible());
-
-        // Procesar la imagen en base64 si está disponible
-        if (vehiculo.getImagen() != null && vehiculo.getImagen().length > 0) {
-            String tipoImagen = "image/jpeg"; // Valor por defecto
-            try (InputStream is = new ByteArrayInputStream(vehiculo.getImagen())) {
-                String detected = URLConnection.guessContentTypeFromStream(is);
-                if (detected != null) {
-                    tipoImagen = detected;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            dto.setImagenBase64("data:" + tipoImagen + ";base64," + Base64.getEncoder().encodeToString(vehiculo.getImagen()));
-        }
-
-        return dto;
     }
 }

@@ -93,12 +93,12 @@
                   <strong>Precio por día:</strong> <span class="text-success fw-bold" th:text="${'$' + #numbers.formatDecimal(vehiculo.precioDia, 1, 2)}"></span>
                 </li>
                 <li class="list-group-item">
-                  <strong>Tipo:</strong> <span th:text="${vehiculo.carroceria}"></span>
+                  <strong>Tipo:</strong> <span th:text="${vehiculo.tipoCarroceria}"></span>
                 </li>
               </ul>
             </div>
             <div class="card-footer bg-transparent border-top-0 pb-3">
-              <a th:href="@{'/user/reserva/book-now?idVehiculo=' + ${vehiculo.vehiculoId} + '&fechaInicio=' + ${fechauno} + '&fechaFin=' + ${fechados}}"
+              <a th:href="@{'/user/reserva/book-now?idVehiculo=' + ${vehiculo.id} + '&fechaInicio=' + ${fechauno} + '&fechaFin=' + ${fechados}}"
                  class="btn btn-primary w-100 py-2 fw-bold">
                 Reservar ahora
               </a>

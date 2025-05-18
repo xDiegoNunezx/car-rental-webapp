@@ -31,7 +31,7 @@
       <tbody>
       <tr th:each="reserva : ${reservas}">
         <td>
-          <span th:text="${reserva.vehiculo.marca} + ' ' + ${reserva.vehiculo.modelo}"></span>
+          <span th:text="${reserva.vehiculo.marca.nombre} + ' ' + ${reserva.vehiculo.modelo}"></span>
           <br>
           <small class="text-muted" th:text="${reserva.vehiculo.numeroPlaca}"></small>
         </td>
@@ -53,7 +53,7 @@
         </td>
         <td>
           <div class="d-flex flex-column gap-1">
-            <form th:action="@{/user/reserva/cancelar/{reservaId}(reservaId=${reserva.reservaId})}"
+            <form th:action="@{/user/reserva/cancelar/{reservaId}(reservaId=${reserva.id})}"
                   method="post"
                   th:if="${!reserva.cancelada && reserva.fechaInicio.isAfter(T(java.time.LocalDate).now())}">
               <button type="submit" class="btn btn-danger btn-sm w-100">Cancelar</button>

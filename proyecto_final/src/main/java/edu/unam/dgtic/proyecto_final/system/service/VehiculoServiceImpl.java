@@ -7,10 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,11 +47,11 @@ public class VehiculoServiceImpl implements VehiculoService {
     public List<Vehiculo> buscarPorFiltros(String marca, String tipoCombustible, String carroceria) {
         // Implementación de búsqueda por múltiples filtros
         if (marca != null && tipoCombustible != null && carroceria != null) {
-            return vehiculoRepository.findByMarcaAndTipoCombustibleAndCarroceria(marca, tipoCombustible, carroceria);
+            return vehiculoRepository.findByMarca_NombreAndTipoCombustible_DescripcionAndTipoCarroceria_Descripcion(marca, tipoCombustible, carroceria);
         } else if (marca != null && tipoCombustible != null) {
-            return vehiculoRepository.findByMarcaAndTipoCombustible(marca, tipoCombustible);
+            return vehiculoRepository.findByMarca_NombreAndTipoCombustible_Descripcion(marca, tipoCombustible);
         } else if (marca != null) {
-            return vehiculoRepository.findByMarca(marca);
+            return vehiculoRepository.findByMarcaNombre(marca);
         } else {
             return vehiculoRepository.findAll();
         }

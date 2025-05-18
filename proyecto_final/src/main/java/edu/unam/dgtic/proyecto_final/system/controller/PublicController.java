@@ -1,19 +1,18 @@
 package edu.unam.dgtic.proyecto_final.system.controller;
 
 import edu.unam.dgtic.proyecto_final.system.converter.MayusculasConverter;
+import edu.unam.dgtic.proyecto_final.system.model.Cliente;
 import edu.unam.dgtic.proyecto_final.system.model.Usuario;
 import edu.unam.dgtic.proyecto_final.system.model.Vehiculo;
 import edu.unam.dgtic.proyecto_final.system.model.dto.ReservaDate;
 import edu.unam.dgtic.proyecto_final.system.model.dto.VehiculoDto;
-import edu.unam.dgtic.proyecto_final.system.service.ReservaService;
-import edu.unam.dgtic.proyecto_final.system.service.UsuarioService;
+import edu.unam.dgtic.proyecto_final.system.service.ClienteService;
 import edu.unam.dgtic.proyecto_final.system.service.VehiculoService;
 import edu.unam.dgtic.proyecto_final.system.util.RenderPagina;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,12 +25,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
 import java.time.LocalDate;
-import java.util.Base64;
 import java.util.List;
 
 @Slf4j
@@ -40,13 +34,7 @@ import java.util.List;
 @SessionAttributes("fecha-busqueda")
 public class PublicController {
     @Autowired
-    UsuarioService usuarioService;
-
-    @Autowired
-    ReservaService reservaService;
-
-    @Autowired
-    MessageSource mensaje;
+    ClienteService clienteService;
 
     @Autowired
     VehiculoService vehiculoService;
@@ -89,7 +77,7 @@ public class PublicController {
 
     @PostMapping("/recibir-registro-usuario")
     public String recibirRegistroUsuario(
-            @Valid Usuario usuario,
+            @Valid Cliente cliente,
             BindingResult bindingResult,
             Model model
     ) {
@@ -100,13 +88,13 @@ public class PublicController {
             return "navegacion/registro-usuario";
         }
         try {
-            usuarioService.guardar(usuario);
+            clienteService.guardar(cliente);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return "navegacion/registro-usuario";
         }
 
-        String cadena = "Usuario Registrado: " + usuario;
+        String cadena = "Usuario Registrado: " + cliente;
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("info", cadena);
         return "navegacion/registro-usuario";
@@ -122,7 +110,7 @@ public class PublicController {
         Page<Vehiculo> vehiculoPage = vehiculoService.obtenerDisponibles(pageable);
 
         // Convertimos a DTO con imagen en Base64
-        Page<VehiculoDto> dtoPage = toDto(pageable, vehiculoPage);
+        Page<VehiculoDto> dtoPage = pageToDto(pageable, vehiculoPage);
 
         RenderPagina<VehiculoDto> renderPagina = new RenderPagina<>("cars", dtoPage);
         modelo.addAttribute("vehiculos", dtoPage);
@@ -160,7 +148,7 @@ public class PublicController {
         Page<Vehiculo> vehiculoPage=vehiculoService.buscarDisponiblesEntreFechas(reservaDate.getFechaInicio(),
                 reservaDate.getFechaFin(),pageable);
 
-        Page<VehiculoDto> dtoPage = toDto(pageable, vehiculoPage);
+        Page<VehiculoDto> dtoPage = pageToDto(pageable, vehiculoPage);
 
         RenderPagina<Vehiculo> renderPagina=new RenderPagina<>("rent-search",vehiculoPage);
 
@@ -181,7 +169,7 @@ public class PublicController {
         Page<Vehiculo> vehiculoPage = vehiculoService.obtenerDisponibles(pageable);
 
         // Convertimos a DTO con imagen en Base64
-        Page<VehiculoDto> dtoPage = toDto(pageable, vehiculoPage);
+        Page<VehiculoDto> dtoPage = pageToDto(pageable, vehiculoPage);
 
         RenderPagina<VehiculoDto> renderPagina = new RenderPagina<>("rent", dtoPage);
 
@@ -198,37 +186,8 @@ public class PublicController {
         return "navegacion/rent"; // templates/buscar_vehiculos.html
     }
 
-    private Page<VehiculoDto> toDto(Pageable pageable, Page<Vehiculo> vehiculoPage) {
-        List<VehiculoDto> vehiculoDtos = vehiculoPage.getContent().stream().map(v -> {
-            VehiculoDto dto = new VehiculoDto();
-            dto.setVehiculoId(v.getVehiculo_id());
-            dto.setNumeroPlaca(v.getNumeroPlaca());
-            dto.setModelo(v.getModelo());
-            dto.setFechaFabricacion(v.getFechaFabricacion());
-            dto.setKilometraje(v.getKilometraje());
-            dto.setCapacidadPersonas(v.getCapacidadPersonas());
-            dto.setPrecioDia(v.getPrecioDia());
-            dto.setMarca(v.getMarca());
-            dto.setTipoCombustible(v.getTipoCombustible());
-            dto.setTransmision(v.getTransmision());
-            dto.setCarroceria(v.getCarroceria());
-            dto.setDisponible(v.getDisponible());
-
-            if (v.getImagen() != null && v.getImagen().length > 0) {
-                String tipoImagen = "image/jpeg"; // valor por defecto
-                try (InputStream is = new ByteArrayInputStream(v.getImagen())) {
-                    String detected = URLConnection.guessContentTypeFromStream(is);
-                    if (detected != null) {
-                        tipoImagen = detected;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                dto.setImagenBase64("data:" + tipoImagen + ";base64," + Base64.getEncoder().encodeToString(v.getImagen()));
-            }
-            return dto;
-        }).toList();
-
+    public Page<VehiculoDto> pageToDto(Pageable pageable, Page<Vehiculo> vehiculoPage) {
+        List<VehiculoDto> vehiculoDtos = vehiculoPage.getContent().stream().map(Vehiculo::toDto).toList();
         return new PageImpl<>(vehiculoDtos, pageable, vehiculoPage.getTotalElements());
     }
 }
