@@ -2,9 +2,7 @@ package edu.unam.dgtic.proyecto_final.system.controller;
 
 import edu.unam.dgtic.proyecto_final.system.model.Cliente;
 import edu.unam.dgtic.proyecto_final.system.model.Reserva;
-import edu.unam.dgtic.proyecto_final.system.model.Usuario;
 import edu.unam.dgtic.proyecto_final.system.model.Vehiculo;
-import edu.unam.dgtic.proyecto_final.system.model.dto.VehiculoDto;
 import edu.unam.dgtic.proyecto_final.system.service.ClienteService;
 import edu.unam.dgtic.proyecto_final.system.service.ReservaService;
 import edu.unam.dgtic.proyecto_final.system.service.VehiculoService;
@@ -19,12 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
 import java.time.LocalDate;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 

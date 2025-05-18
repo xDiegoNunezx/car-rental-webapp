@@ -1,4 +1,4 @@
-package edu.unam.dgtic.proyecto_final.system.model;
+package edu.unam.dgtic.proyecto_final.auth.model;
 
 import edu.unam.dgtic.proyecto_final.system.validation.NoEspacioVacio;
 import jakarta.persistence.*;
@@ -52,9 +52,6 @@ public class Usuario {
     @Column(length = 100, nullable = false)
     private String contrasena;
 
-    @Column(name = "es_administrador", nullable = false)
-    private boolean esAdministrador;
-
     @NoEspacioVacio(message = "La dirección no debe estar vacía")
     @Column(length = 200, nullable = false)
     private String direccion;
@@ -66,4 +63,7 @@ public class Usuario {
     @NoEspacioVacio(message = "La ciudad no debe estar vacía")
     @Column(length = 50, nullable = false)
     private String ciudad;
+
+    @Column(name = "es_administrador", nullable = false)
+    private boolean esAdministrador;
 }

@@ -1,7 +1,6 @@
 package edu.unam.dgtic.proyecto_final.system.repository;
 
 import edu.unam.dgtic.proyecto_final.system.model.Cliente;
-import edu.unam.dgtic.proyecto_final.system.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

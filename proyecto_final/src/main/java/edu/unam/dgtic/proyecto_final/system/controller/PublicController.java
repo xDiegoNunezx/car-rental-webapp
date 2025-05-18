@@ -2,7 +2,7 @@ package edu.unam.dgtic.proyecto_final.system.controller;
 
 import edu.unam.dgtic.proyecto_final.system.converter.MayusculasConverter;
 import edu.unam.dgtic.proyecto_final.system.model.Cliente;
-import edu.unam.dgtic.proyecto_final.system.model.Usuario;
+import edu.unam.dgtic.proyecto_final.auth.model.Usuario;
 import edu.unam.dgtic.proyecto_final.system.model.Vehiculo;
 import edu.unam.dgtic.proyecto_final.system.model.dto.ReservaDate;
 import edu.unam.dgtic.proyecto_final.system.model.dto.VehiculoDto;

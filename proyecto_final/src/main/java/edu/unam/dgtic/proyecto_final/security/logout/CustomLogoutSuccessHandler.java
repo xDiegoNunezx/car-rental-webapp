@@ -14,18 +14,35 @@ import java.io.IOException;
 @Slf4j
 @Service
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
-
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("Logout Handler");
-        Cookie[] cookies2 = request.getCookies();
-        for (Cookie cookie : cookies2) {
-            if (cookie.getName().equals("token")) {
-                cookie.setMaxAge(0);
-                response.addCookie(cookie);
-                log.info("Logout successfully");
-                response.sendRedirect(request.getContextPath());
+        Cookie[] cookies = request.getCookies();
+        boolean tokenFound = false;
+
+        if (cookies != null) {
+            log.info("Total cookies encontradas: {}", cookies.length);
+
+            for (Cookie cookie : cookies) {
+                log.info("Cookie encontrada: {} = {}", cookie.getName(), cookie.getValue());
+
+                if (cookie.getName().equals("token")) {
+                    tokenFound = true;
+                    log.info("Cookie token encontrada, estableciendo maxAge=0");
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                }
             }
+        } else {
+            log.info("No se encontraron cookies en la solicitud");
         }
+
+        if (tokenFound) {
+            log.info("Logout exitoso");
+        } else {
+            log.info("No se encontró la cookie token");
+        }
+
+        response.sendRedirect(request.getContextPath());
     }
 }

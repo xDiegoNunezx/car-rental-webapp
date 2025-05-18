@@ -1,7 +1,6 @@
 package edu.unam.dgtic.proyecto_final.security.model;
 
-import edu.unam.dgtic.proyecto_final.auth.model.UserInfo;
-import edu.unam.dgtic.proyecto_final.auth.model.UserInfoRole;
+import edu.unam.dgtic.proyecto_final.auth.model.Usuario;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,41 +12,43 @@ public class UserDetailsImpl implements UserDetails {
     private Long id;
     private String name;
     private String email;
-    private Collection<? extends GrantedAuthority> authorities;
+    private boolean isAdmin;
+    private Collection<SimpleGrantedAuthority> authorities;
     private Map<String, Object> attributes;
-    private UserInfo userInfo;
+    private Usuario usuario;
 
-    public UserDetailsImpl(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    public UserDetailsImpl(Usuario usuario) {
+        this.usuario = usuario;
     }
 
-    public UserDetailsImpl(Long id, String name, String email, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String name, String email, Collection<SimpleGrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.authorities = authorities;
     }
 
-    public static UserDetailsImpl build(UserInfo user) {
-        List<GrantedAuthority> authorities = user.getUseInfoRoles().stream().map(role ->
-                new SimpleGrantedAuthority(role.getUsrRoleName())
-        ).collect(Collectors.toList());
+    public static UserDetailsImpl build(Usuario usuario) {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(
+                usuario.isEsAdministrador() ? "ADMIN" : "USER"
+        ));
+
         return new UserDetailsImpl(
-                user.getUseId(),
-                user.getFullName(),
-                user.getUseEmail(),
+                usuario.getId(),
+                usuario.getNombreCompleto(),
+                usuario.getEmail(),
                 authorities
         );
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (null == userInfo.getUseInfoRoles()) {
-            return Collections.emptySet();
-        }
         Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (UserInfoRole role : userInfo.getUseInfoRoles()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getUsrRoleName()));
+        if (isAdmin) {
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        } else {
+            authorities.add(new SimpleGrantedAuthority("USER"));
         }
         return grantedAuthorities;
     }
@@ -58,7 +59,7 @@ public class UserDetailsImpl implements UserDetails {
      */
     @Override
     public String getUsername() {
-        return userInfo.getUseEmail();
+        return usuario.getEmail();
     }
 
     /**
@@ -67,7 +68,7 @@ public class UserDetailsImpl implements UserDetails {
      */
     @Override
     public String getPassword() {
-        return userInfo.getUsePasswd();
+        return usuario.getContrasena();
     }
 
     /**
@@ -75,7 +76,7 @@ public class UserDetailsImpl implements UserDetails {
      * @return name
      */
     public String getName() {
-        return userInfo.getUseFirstName();
+        return usuario.getNombreCompleto();
     }
 
     /**
@@ -83,7 +84,7 @@ public class UserDetailsImpl implements UserDetails {
      * @return email
      */
     public String getEmail() {
-        return userInfo.getUseEmail();
+        return usuario.getEmail();
     }
 
     /**
@@ -92,7 +93,7 @@ public class UserDetailsImpl implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-        return userInfo.getUseIdStatus() == 1;
+        return true;
     }
 
     /**

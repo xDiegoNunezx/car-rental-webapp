@@ -1,7 +1,6 @@
 package edu.unam.dgtic.proyecto_final.system.service;
 
 import edu.unam.dgtic.proyecto_final.system.model.Cliente;
-import edu.unam.dgtic.proyecto_final.system.model.Usuario;
 
 import java.util.Optional;
 

@@ -1,8 +1,8 @@
 package edu.unam.dgtic.proyecto_final.system.model;
 
+import edu.unam.dgtic.proyecto_final.auth.model.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +23,9 @@ public class Cliente extends Usuario {
 
     @Column(name = "fecha_expiracion_licencia", nullable = false)
     private LocalDate fechaExpiracionLicencia;
+
+    @PrePersist
+    public void prePersist() {
+        setEsAdministrador(false); // Los clientes nunca son admin
+    }
 }

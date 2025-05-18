@@ -72,13 +72,13 @@ INSERT INTO usuarios (
 )
 VALUES
     ('ABC1234567890', 'juan@example.com', 'Juan Pérez', '5523456789', '1990-05-12',
-     'contrasena123', FALSE, 'Av. Siempre Viva 123', 'México', 'CDMX'),
+     '$2a$11$yAmI6uiXh2Nen9n8nkWJDuK8kfp33q0iM4cb4ZLGhp9WNyaYb0pZi', FALSE, 'Av. Siempre Viva 123', 'México', 'CDMX'),
 
     ('XYZ9876543210', 'laura@example.com', 'Laura García', '5587654321', '1988-11-03',
-     'segura456', FALSE, 'Calle Falsa 456', 'México', 'Guadalajara'),
+     '$2a$11$yAmI6uiXh2Nen9n8nkWJDuK8kfp33q0iM4cb4ZLGhp9WNyaYb0pZi', FALSE, 'Calle Falsa 456', 'México', 'Guadalajara'),
 
     ('ADM1234567890', 'admin@rentacar.com', 'Administrador General', '5512345678', '1985-02-20',
-     'adminsecurepass', TRUE, 'Oficinas Centrales 100', 'México', 'CDMX');
+     '$2a$11$yAmI6uiXh2Nen9n8nkWJDuK8kfp33q0iM4cb4ZLGhp9WNyaYb0pZi', TRUE, 'Oficinas Centrales 100', 'México', 'CDMX');
 
 -- Clientes
 INSERT INTO clientes (

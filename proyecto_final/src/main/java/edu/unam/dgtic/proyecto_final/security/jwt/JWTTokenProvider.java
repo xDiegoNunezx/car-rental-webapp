@@ -1,6 +1,6 @@
 package edu.unam.dgtic.proyecto_final.security.jwt;
 
-import edu.unam.dgtic.proyecto_final.auth.dto.UserInfoDTO;
+import edu.unam.dgtic.proyecto_final.auth.dto.UsuarioDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -30,14 +30,14 @@ public class JWTTokenProvider {
         this.jwtExpirationInMs = jwtExpirationInMs;
     }
 
-    public String generateJwtToken(Authentication authentication, UserInfoDTO user) {
-        Claims claims = Jwts.claims().setSubject("UNAM").setIssuer(user.getUseEmail())
+    public String generateJwtToken(Authentication authentication, UsuarioDTO user) {
+        Claims claims = Jwts.claims().setSubject("UNAM").setIssuer(user.getEmail())
                 .setAudience("JAVA");
         claims.put("principal", authentication.getPrincipal());
         claims.put("auth", authentication.getAuthorities().stream().map(s -> new SimpleGrantedAuthority(s.getAuthority()))
                 .collect(Collectors.toList()));
-        claims.put("issid", user.getUseId());
-        claims.put("issname", user.getUseFirstName() + " " + user.getUseLastName());
+        claims.put("issid", user.getId());
+        claims.put("issname", user.getNombreCompleto());
         key = Keys.hmacShaKeyFor(secret.getBytes());
         return Jwts.builder()
                 .setClaims(claims)
