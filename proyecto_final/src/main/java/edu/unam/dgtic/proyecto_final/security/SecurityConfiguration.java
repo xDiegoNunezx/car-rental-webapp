@@ -52,6 +52,7 @@ public class SecurityConfiguration {
                     .loginPage("/auth/login")
                     .defaultSuccessUrl("/public")
                     .successForwardUrl("/auth/login_success_handler")
+                    .failureForwardUrl("/auth/login_failure_handler")
                     .permitAll())
             .logout(logout -> logout
                     .logoutUrl("/doLogout")

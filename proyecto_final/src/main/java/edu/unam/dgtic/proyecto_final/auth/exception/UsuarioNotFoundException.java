@@ -8,5 +8,5 @@ public class UsuarioNotFoundException extends RuntimeException {
     public UsuarioNotFoundException(Long id) {
         super("Usuario con id " + id + " no encontrado");
     }
-    public UsuarioNotFoundException(String email) { super("Usuario con email " + email + " ya existe"); }
+    public UsuarioNotFoundException(String email) { super("Usuario con email " + email + " no encontrado"); }
 }

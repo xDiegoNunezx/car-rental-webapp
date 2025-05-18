@@ -43,6 +43,6 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
             log.info("No se encontró la cookie token");
         }
 
-        response.sendRedirect(request.getContextPath());
+        response.sendRedirect("/auth/login?logout=true");
     }
 }

@@ -53,8 +53,10 @@ public class AuthController {
     }
 
     @PostMapping("/login_failure_handler")
-    public String loginFailureHandler() {
+    public String loginFailureHandler(Model model) {
         System.out.println("Login failure handler....");
+        model.addAttribute("error", true);
+        model.addAttribute("errorMsg", "Email o contraseña incorrectos");
         return "login";
     }
 
@@ -100,9 +102,9 @@ public class AuthController {
             res.addCookie(cookie);
             session.setAttribute("msg","Login OK!");
 
-        } catch (UsernameNotFoundException | BadCredentialsException e) {
+        } catch (UsuarioNotFoundException | BadCredentialsException e) {
             session.setAttribute("msg","Bad Credentials");
-            return "redirect:/auth/login";
+            return "redirect:/auth/login?error=true";
         }
         return "redirect:/public";
     }

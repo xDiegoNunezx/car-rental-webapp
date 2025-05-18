@@ -7,36 +7,27 @@
 <body>
 <header th:replace="~{plantillas/plantilla :: header}"></header>
 <main class="container text-center shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-    <h1>Log In</h1>
+    <h1>Iniciar Sesión</h1>
     <div class="container">
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <div th:if="${param.error}">
-                    <div class="alert alert-danger">Invalid Username or Password</div>
+                    <div class="alert alert-danger">Email o contraseña incorrectos</div>
                 </div>
                 <div th:if="${param.logout}">
-                    <div class="alert alert-success">You have been logged out.</div>
+                    <div class="alert alert-success">Haz cerrado sesión</div>
                 </div>
                 <div class="card">
                     <div class="card-body">
                         <form method="post" role="form" th:action="@{/auth/token}" class="form-horizontal">
-                            <!-- form method="post" role="form" th:action="@{/doLogin}" class="form-horizontal" -->
                             <div class="form-group mb-3">
-                                <label class="control-label">Username</label>
-                                <input type="text" id="username" name="username" class="form-control" placeholder="Enter username"/>
+                                <label class="control-label"> Email</label>
+                                <input type="email" id="username" name="username" class="form-control" placeholder="Enter email"/>
                             </div>
                             <div class="form-group mb-3">
                                 <label class="control-label">Password</label>
                                 <input type="password" id="password" name="password" class="form-control" placeholder="Enter password"/>
                             </div>
-                            <!-- div class="form-group mb-3">
-                                <label class="control-label"> Email</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter email"/>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label class="control-label"> Password</label>
-                                <input type="password" id="pass" name="pass" class="form-control" placeholder="Enter password"/>
-                            </div -->
                             <div class="form-group mb-3">
                                 <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
                             </div>
