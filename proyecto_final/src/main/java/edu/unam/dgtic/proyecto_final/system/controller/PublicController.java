@@ -69,37 +69,6 @@ public class PublicController {
         return "navegacion/faq";
     }
 
-    @GetMapping("/registro-usuario")
-    public String registroUsuario(Model model) {
-        model.addAttribute("usuario", new Usuario());
-        return "navegacion/registro-usuario";
-    }
-
-    @PostMapping("/recibir-registro-usuario")
-    public String recibirRegistroUsuario(
-            @Valid Cliente cliente,
-            BindingResult bindingResult,
-            Model model
-    ) {
-        if (bindingResult.hasErrors()) {
-            for (ObjectError error : bindingResult.getAllErrors()) {
-                System.out.println(error.getDefaultMessage());
-            }
-            return "navegacion/registro-usuario";
-        }
-        try {
-            clienteService.guardar(cliente);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "navegacion/registro-usuario";
-        }
-
-        String cadena = "Usuario Registrado: " + cliente;
-        model.addAttribute("usuario", new Usuario());
-        model.addAttribute("info", cadena);
-        return "navegacion/registro-usuario";
-    }
-
     @GetMapping("/cars")
     public String cars(@RequestParam(name = "page", defaultValue = "0") int page,
                        Model modelo,

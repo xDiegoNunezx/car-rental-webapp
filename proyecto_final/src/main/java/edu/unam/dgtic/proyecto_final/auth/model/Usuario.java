@@ -1,10 +1,12 @@
 package edu.unam.dgtic.proyecto_final.auth.model;
 
+import edu.unam.dgtic.proyecto_final.system.validation.MayorDeEdad;
 import edu.unam.dgtic.proyecto_final.system.validation.NoEspacioVacio;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class Usuario {
 
     @NoEspacioVacio(message = "El RFC no debe ser vacío")
     @Column(length = 13, unique = true, nullable = false)
+    @Size(min = 13, message = "El RFC debe tener al menos 13 dígitos")
     private String rfc;
 
     @Email
@@ -40,11 +43,13 @@ public class Usuario {
 
     @NoEspacioVacio(message = "El número de teléfono no debe estar vacío")
     @Column(name = "numero_telefono", length = 15, nullable = false)
+    @Size(min = 10, message = "El número de teléfono debe tener al menos 10 dígitos")
     private String numeroTelefono;
 
-    @NotNull(message = "La fecha no debe estar vacía")
+    @NotNull(message = "La fecha de nacimiento no debe estar vacía")
     @PastOrPresent(message = "La fecha de nacimiento no puede ser en el futuro")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @MayorDeEdad
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
 

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,6 +20,9 @@ public class ClienteServiceImpl implements ClienteService {
    @Autowired
    private ClienteRepository clienteRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public String getText() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         log.info("Auth {}", auth);
@@ -29,6 +33,9 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public Cliente guardar(Cliente cliente) {
+        log.info("Service - UserAdmin.save");
+        log.info("Service - UserAdmin.save object {} ", cliente);
+
         if (clienteRepository.findByEmail(cliente.getEmail()).isPresent()) {
             throw new IllegalStateException("El email ya está registrado");
         }
@@ -37,11 +44,12 @@ public class ClienteServiceImpl implements ClienteService {
             throw new IllegalStateException("El RFC ya está registrado");
         }
 
-        // Validar edad mínima (18 años)
         Period edad = Period.between(cliente.getFechaNacimiento(), LocalDate.now());
         if (edad.getYears() < 18) {
             throw new IllegalStateException("Debes tener al menos 18 años para registrarte");
         }
+
+        cliente.setContrasena(passwordEncoder.encode(cliente.getContrasena()));
 
         return clienteRepository.save(cliente);
     }

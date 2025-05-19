@@ -2,14 +2,18 @@ package edu.unam.dgtic.proyecto_final.auth.controller;
 
 import edu.unam.dgtic.proyecto_final.auth.dto.UsuarioDTO;
 import edu.unam.dgtic.proyecto_final.auth.exception.UsuarioNotFoundException;
+import edu.unam.dgtic.proyecto_final.auth.model.Usuario;
 import edu.unam.dgtic.proyecto_final.auth.service.UsuarioService;
 import edu.unam.dgtic.proyecto_final.security.jwt.JWTTokenProvider;
 import edu.unam.dgtic.proyecto_final.security.request.JwtRequest;
 import edu.unam.dgtic.proyecto_final.security.request.LoginUserRequest;
 import edu.unam.dgtic.proyecto_final.security.service.UserDetailsServiceImpl;
+import edu.unam.dgtic.proyecto_final.system.model.Cliente;
+import edu.unam.dgtic.proyecto_final.system.service.ClienteService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +37,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private ClienteService clienteService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -65,17 +74,37 @@ public class AuthController {
         return "access-denied";
     }
 
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new UsuarioDTO());
-        return "signup_form";
+    @GetMapping("/registro-usuario")
+    public String registroUsuario(Model model) {
+        model.addAttribute("usuario", new Cliente());
+        return "navegacion/registro-usuario";
     }
 
-    @PostMapping("/process_register")
-    public String processRegister(UsuarioDTO user) throws UsuarioNotFoundException {
-        user.setEsAdministrador(false);
-        usuarioService.save(user);
-        return "register_success";
+    @PostMapping("/recibir-registro-usuario")
+    public String recibirRegistroUsuario(
+            @Valid @ModelAttribute("usuario") Cliente cliente,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                System.out.println(error.getDefaultMessage());
+            }
+            return "navegacion/registro-usuario";
+        }
+        try {
+            cliente.setEsAdministrador(false);
+            clienteService.guardar(cliente);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            bindingResult.addError(new ObjectError("usuario", "Error al registrar usuario: " + e.getMessage()));
+            return "navegacion/registro-usuario";
+        }
+
+        String cadena = "Usuario Registrado: " + cliente;
+        model.addAttribute("usuario", new Cliente());
+        model.addAttribute("info", cadena);
+        return "redirect:/auth/login?loginSuccessful=true";
     }
 
     @PostMapping("/token")
