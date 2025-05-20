@@ -34,6 +34,6 @@ public class VehiculoDto {
     private Short capacidadPersonas;
     private String disponibilidad;
     private Double precioDia;
-    private String imagenBase64; // <-- para Thymeleaf
+    private String imagenBase64;
     private String tipoCarroceria;
 }

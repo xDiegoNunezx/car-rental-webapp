@@ -15,4 +15,6 @@ public interface ReservaService {
                  boolean asientoInfantil, boolean asientoElevador, boolean conductoresAdicionales);
 
     void cancelarReserva(Long reservaId);
+
+    List<Reserva> obtenerReservasPorVehiculo(Long vehiculoId);
 }

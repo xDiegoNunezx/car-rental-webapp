@@ -1,6 +1,7 @@
 package edu.unam.dgtic.proyecto_final.system.service;
 
 import edu.unam.dgtic.proyecto_final.system.model.Vehiculo;
+import edu.unam.dgtic.proyecto_final.system.model.dto.VehiculoDto;
 import edu.unam.dgtic.proyecto_final.system.repository.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,8 +40,13 @@ public class VehiculoServiceImpl implements VehiculoService {
     }
 
     @Override
-    public Optional<Vehiculo> obtenerPorId(Long id) {
+    public Optional<Vehiculo> obtenerVehiculoEntidad(Long id) {
         return vehiculoRepository.findById(id);
+    }
+
+    @Override
+    public Optional<VehiculoDto> obtenerPorId(Long id) {
+        return vehiculoRepository.findById(id).map(Vehiculo::toDto);
     }
 
     @Override
@@ -60,5 +66,25 @@ public class VehiculoServiceImpl implements VehiculoService {
     @Override
     public Page<Vehiculo> findPage(Pageable pageable) {
         return vehiculoRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<VehiculoDto> findAll() {
+        return vehiculoRepository.findAll().stream().map(Vehiculo::toDto).toList();
+    }
+
+    @Override
+    public List<VehiculoDto> findAllByDisponibilidad(Long id) {
+        return vehiculoRepository.findByDisponibilidad_Id(id).stream().map(Vehiculo::toDto).toList();
+    }
+
+    @Override
+    public void eliminar(Long vehiculoId) {
+        vehiculoRepository.deleteById(vehiculoId);
+    }
+
+    @Override
+    public Vehiculo guardar(Vehiculo vehiculo) {
+        return vehiculoRepository.save(vehiculo);
     }
 }

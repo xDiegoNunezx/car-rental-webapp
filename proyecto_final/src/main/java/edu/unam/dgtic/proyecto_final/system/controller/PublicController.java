@@ -34,9 +34,6 @@ import java.util.List;
 @SessionAttributes("fecha-busqueda")
 public class PublicController {
     @Autowired
-    ClienteService clienteService;
-
-    @Autowired
     VehiculoService vehiculoService;
 
     @InitBinder("usuario")

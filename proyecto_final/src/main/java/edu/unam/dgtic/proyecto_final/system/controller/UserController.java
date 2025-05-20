@@ -4,6 +4,8 @@ import edu.unam.dgtic.proyecto_final.security.model.UserDetailsImpl;
 import edu.unam.dgtic.proyecto_final.system.model.Cliente;
 import edu.unam.dgtic.proyecto_final.system.model.Reserva;
 import edu.unam.dgtic.proyecto_final.system.model.Vehiculo;
+import edu.unam.dgtic.proyecto_final.system.model.dto.VehiculoDto;
+import edu.unam.dgtic.proyecto_final.system.repository.VehiculoRepository;
 import edu.unam.dgtic.proyecto_final.system.service.ClienteService;
 import edu.unam.dgtic.proyecto_final.system.service.ReservaService;
 import edu.unam.dgtic.proyecto_final.system.service.VehiculoService;
@@ -76,7 +78,7 @@ public class UserController {
                                            @RequestParam("fechaFin") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaFin,
                                            Model model) {
 
-        Vehiculo vehiculo = vehiculoService.obtenerPorId(idVehiculo).get();
+        Vehiculo vehiculo = vehiculoService.obtenerVehiculoEntidad(idVehiculo).get();
         Reserva reserva = new Reserva();
         reserva.setFechaInicio(fechaInicio);
         reserva.setFechaFin(fechaFin);
@@ -93,7 +95,7 @@ public class UserController {
             BindingResult bindingResult,
             Model model
     ) {
-        Vehiculo vehiculo = vehiculoService.obtenerPorId(reserva.getVehiculo().getId()).get();
+        Vehiculo vehiculo = vehiculoService.obtenerVehiculoEntidad(reserva.getVehiculo().getId()).get();
 
         model.addAttribute("automovil", vehiculo.toDto());
         if (bindingResult.hasErrors()) {

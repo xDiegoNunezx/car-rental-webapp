@@ -5,7 +5,145 @@
 <body>
 <header th:replace="~{plantillas/plantilla :: header}"></header>
 <main class="container text-center shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-  <h1> Mantenimiento </h1>
+  <h1 class="mb-4">Mantenimiento de Vehículos</h1>
+
+  <!-- Pestañas para navegar entre las secciones -->
+  <ul class="nav nav-tabs justify-content-center mb-4" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="disponibles-tab" data-bs-toggle="tab" data-bs-target="#disponibles" type="button" role="tab">
+        Todos los Vehículos
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="mantenimiento-tab" data-bs-toggle="tab" data-bs-target="#mantenimiento" type="button" role="tab">
+        En Mantenimiento
+      </button>
+    </li>
+  </ul>
+
+  <!-- Contenido de las pestañas -->
+  <div class="tab-content" id="myTabContent">
+    <!-- Sección de todos los vehículos -->
+    <div class="tab-pane fade show active" id="disponibles" role="tabpanel">
+      <div class="text-center mb-4">
+        <h2>Vehículos Disponibles</h2>
+        <p class="lead text-muted mx-auto" style="max-width: 800px;">Listado completo de todos los automóviles</p>
+      </div>
+
+      <!-- Listado de vehículos -->
+      <div class="row justify-content-center row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 mt-3" th:if="${!vehiculos.isEmpty()}">
+        <div class="col d-flex" th:each="vehiculo : ${vehiculos}">
+          <div class="card h-100 w-100 shadow-sm hover-shadow">
+            <!-- Mostrar imagen del vehículo -->
+            <div class="card-img-top overflow-hidden" style="height: 200px;">
+              <img th:if="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+                   th:src="${vehiculo.imagenBase64}"
+                   class="w-100 h-100 object-fit-cover" alt="Imagen del vehículo">
+              <img th:unless="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+                   th:src="@{/image/civic.png}"
+                   class="w-100 h-100 object-fit-cover" alt="Imagen por defecto">
+            </div>
+
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold" th:text="${vehiculo.marca + ' ' + vehiculo.modelo}"></h5>
+              <ul class="list-group list-group-flush flex-grow-1">
+                <li class="list-group-item">
+                  <strong>Placa:</strong> <span th:text="${vehiculo.numeroPlaca}"></span>
+                </li>
+                <li class="list-group-item">
+                  <strong>Capacidad:</strong> <span th:text="${vehiculo.capacidadPersonas + ' personas'}"></span>
+                </li>
+                <li class="list-group-item">
+                  <strong>Precio por día:</strong> <span class="text-success fw-bold" th:text="${'$' + #numbers.formatDecimal(vehiculo.precioDia, 1, 2)}"></span>
+                </li>
+                <li class="list-group-item">
+                  <strong>Tipo:</strong> <span th:text="${vehiculo.tipoCarroceria}"></span>
+                </li>
+                <li class="list-group-item" th:if="${vehiculo.disponibilidad == 'En Mantenimiento'}">
+                  <span class="badge bg-warning text-dark" th:text="${vehiculo.disponibilidad}"></span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer bg-transparent border-top-0 pb-3">
+              <!-- Botón para ver detalles -->
+              <a th:href="@{'/admin/detalle/' + ${vehiculo.id}}"
+                 class="btn btn-info w-100 py-2 fw-bold">
+                <i class="bi bi-eye-fill me-2"></i>Detalle
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje si no hay vehículos -->
+      <div class="alert alert-warning mt-5 text-center" th:if="${vehiculos.isEmpty()}" style="max-width: 600px; margin: 0 auto;">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        No hay vehículos registrados en el sistema.
+      </div>
+    </div>
+
+    <!-- Sección de vehículos en mantenimiento -->
+    <div class="tab-pane fade" id="mantenimiento" role="tabpanel">
+      <div class="text-center mb-4">
+        <h2>Vehículos en Mantenimiento</h2>
+        <p class="lead text-muted mx-auto" style="max-width: 800px;">Vehículos que actualmente están en taller</p>
+      </div>
+
+      <!-- Listado de vehículos en mantenimiento -->
+      <div class="row justify-content-center row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 mt-3"
+           th:if="${!vehiculosEnMantenimiento.isEmpty()}">
+        <div class="col d-flex" th:each="vehiculo : ${vehiculosEnMantenimiento}">
+          <div class="card h-100 w-100 shadow-sm hover-shadow">
+            <!-- Mostrar imagen del vehículo -->
+            <div class="card-img-top overflow-hidden" style="height: 200px;">
+              <img th:if="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+                   th:src="${vehiculo.imagenBase64}"
+                   class="w-100 h-100 object-fit-cover" alt="Imagen del vehículo">
+              <img th:unless="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+                   th:src="@{/image/civic.png}"
+                   class="w-100 h-100 object-fit-cover" alt="Imagen por defecto">
+            </div>
+
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold" th:text="${vehiculo.marca + ' ' + vehiculo.modelo}"></h5>
+              <ul class="list-group list-group-flush flex-grow-1">
+                <li class="list-group-item">
+                  <strong>Placa:</strong> <span th:text="${vehiculo.numeroPlaca}"></span>
+                </li>
+                <li class="list-group-item">
+                  <strong>Capacidad:</strong> <span th:text="${vehiculo.capacidadPersonas + ' personas'}"></span>
+                </li>
+                <li class="list-group-item">
+                  <strong>Precio por día:</strong> <span class="text-success fw-bold" th:text="${'$' + #numbers.formatDecimal(vehiculo.precioDia, 1, 2)}"></span>
+                </li>
+                <li class="list-group-item">
+                  <strong>Tipo:</strong> <span th:text="${vehiculo.tipoCarroceria}"></span>
+                </li>
+                <li class="list-group-item">
+                  <span class="badge bg-warning text-dark" th:text="${vehiculo.disponibilidad}"></span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer bg-transparent border-top-0 pb-3">
+              <!-- Botón de detalles para vehículos en mantenimiento -->
+              <a th:href="@{'/admin/detalle/' + ${vehiculo.id}}"
+                 class="btn btn-info w-100 py-2 fw-bold">
+                <i class="bi bi-eye-fill me-2"></i>Detalle
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje si no hay vehículos en mantenimiento -->
+      <div class="alert alert-info mt-5 text-center"
+           th:if="${vehiculosEnMantenimiento.isEmpty()}"
+           style="max-width: 600px; margin: 0 auto;">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        No hay vehículos en mantenimiento en este momento.
+      </div>
+    </div>
+  </div>
 </main>
 <footer th:replace="~{plantillas/plantilla :: footer}"></footer>
 </body>

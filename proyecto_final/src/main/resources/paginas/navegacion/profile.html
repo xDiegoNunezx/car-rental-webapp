@@ -48,8 +48,11 @@
         </td>
         <td th:text="${'$' + #numbers.formatDecimal(reserva.pagoTotal, 1, 2, 'POINT')}"></td>
         <td>
-          <span th:if="${reserva.cancelada}" class="badge bg-danger">Cancelada</span>
-          <span th:unless="${reserva.cancelada}" class="badge bg-success">Activa</span>
+          <span th:if="${reserva.cancelada}" class="badge bg-danger">CANCELADA</span>
+          <span th:if="${!reserva.cancelada}">
+            <span th:if="${reserva.fechaInicio.isAfter(T(java.time.LocalDate).now())}" class="badge bg-success">CONFIRMADA</span>
+            <span th:if="${reserva.fechaInicio.isBefore(T(java.time.LocalDate).now())}" class="badge bg-info text-dark">COMPLETADA</span>
+          </span>
         </td>
         <td>
           <div class="d-flex flex-column gap-1">

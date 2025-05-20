@@ -24,4 +24,5 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo,Long> {
     List<Vehiculo> findByMarcaNombre(String marca);
     List<Vehiculo> findByMarca_NombreAndTipoCombustible_DescripcionAndTipoCarroceria_Descripcion(String marca, String tipoCombustible, String carroceria);
     List<Vehiculo> findByMarca_NombreAndTipoCombustible_Descripcion(String marca, String tipoCombustible);
+    List<Vehiculo> findByDisponibilidad_Id(Long id);
 }

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="es">
+<head th:replace="~{plantillas/plantilla :: head}">
+  <title>Detalle del Vehículo</title>
+</head>
+<body>
+<header th:replace="~{plantillas/plantilla :: header}"></header>
+<main class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Detalle del Vehículo</h1>
+    <div>
+      <a th:href="@{/admin/maintenance}" class="btn btn-secondary me-2">
+        <i class="bi bi-arrow-left"></i> Volver
+      </a>
+      <a th:href="@{'/admin/editar-auto/' + ${vehiculo.id}}" class="btn btn-primary me-2">
+        <i class="bi bi-pencil-fill"></i> Editar
+      </a>
+      <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmarBajaModal">
+        <i class="bi bi-trash-fill"></i> Dar de baja
+      </button>
+    </div>
+  </div>
+
+  <!-- Información principal del vehículo -->
+  <div class="card mb-4">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <div class="p-3" style="height: 100%; display: flex; align-items: center; justify-content: center;">
+          <img th:if="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+               th:src="${vehiculo.imagenBase64}"
+               class="img-fluid rounded-start" alt="Imagen del vehículo" style="max-height: 300px;">
+          <img th:unless="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+               th:src="@{/image/civic.png}"
+               class="img-fluid rounded-start" alt="Imagen por defecto" style="max-height: 300px;">
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h2 class="card-title" th:text="${vehiculo.marca + ' ' + vehiculo.modelo}"></h2>
+          <div th:if="${vehiculo.disponibilidad == 'En Mantenimiento'}" class="mb-3">
+            <span class="badge bg-warning text-dark fs-6" th:text="${vehiculo.disponibilidad}"></span>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Placa:</strong> <span th:text="${vehiculo.numeroPlaca}"></span></p>
+              <p><strong>Año:</strong> <span th:text="${#temporals.format(vehiculo.fechaFabricacion, 'yyyy')}"></span></p>
+              <p><strong>Kilometraje:</strong> <span th:text="${#numbers.formatDecimal(vehiculo.kilometraje, 1, 2) + ' km'}"></span></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Tipo:</strong> <span th:text="${vehiculo.tipoCarroceria}"></span></p>
+              <p><strong>Capacidad:</strong> <span th:text="${vehiculo.capacidadPersonas + ' personas'}"></span></p>
+              <p><strong>Precio por día:</strong> <span class="text-success fw-bold" th:text="${'$' + #numbers.formatDecimal(vehiculo.precioDia, 1, 2)}"></span></p>
+              <p><strong>Transmisión:</strong> <span th:text="${vehiculo.transmision}"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pestañas para historiales -->
+  <ul class="nav nav-tabs mb-4" id="historialTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="mantenimientos-tab" data-bs-toggle="tab" data-bs-target="#mantenimientos" type="button" role="tab">
+        Historial de Mantenimientos
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="reservas-tab" data-bs-toggle="tab" data-bs-target="#reservas" type="button" role="tab">
+        Historial de Reservas
+      </button>
+    </li>
+  </ul>
+
+  <!-- Contenido de las pestañas -->
+  <div class="tab-content" id="historialTabsContent">
+    <!-- Historial de mantenimientos -->
+    <div class="tab-pane fade show active" id="mantenimientos" role="tabpanel">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#nuevoMantenimientoModal">
+          <i class="bi bi-plus-circle me-1"></i> Nuevo Mantenimiento
+        </button>
+      </div>
+      <div th:if="${mensajeExito != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${mensajeExito}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <div th:if="${!mantenimientos.isEmpty()}">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+              <th>Tipo</th>
+              <th>Fecha Inicio</th>
+              <th>Fecha Fin</th>
+              <th>Costo</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mantenimiento : ${mantenimientos}">
+              <td th:text="${mantenimiento.tipoMantenimiento.descripcion}"></td>
+              <td th:text="${#temporals.format(mantenimiento.fechaInicio, 'dd/MM/yyyy')}"></td>
+              <td>
+                <span th:if="${mantenimiento.fechaFin != null}"
+                      th:text="${#temporals.format(mantenimiento.fechaFin, 'dd/MM/yyyy')}"></span>
+                <span th:if="${mantenimiento.fechaFin == null}" class="text-muted">En proceso</span>
+              </td>
+              <td th:text="${'$' + #numbers.formatDecimal(mantenimiento.costo, 1, 2)}"></td>
+              <td>
+                <span th:if="${mantenimiento.fechaFin == null}" class="badge bg-warning">EN PROCESO</span>
+                <span th:if="${mantenimiento.fechaFin != null}" class="badge bg-success">COMPLETADO</span>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button class="btn btn-sm btn-outline-primary"
+                          data-bs-toggle="modal"
+                          data-bs-target="#editarMantenimientoModal"
+                          th:attr="data-id=${mantenimiento.id},
+                                  data-tipo=${mantenimiento.tipoMantenimiento.id},
+                                  data-fechainicio=${#temporals.format(mantenimiento.fechaInicio, 'yyyy-MM-dd')},
+                                  data-fechafin=${mantenimiento.fechaFin != null ? #temporals.format(mantenimiento.fechaFin, 'yyyy-MM-dd') : ''},
+                                  data-costo=${mantenimiento.costo}">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger"
+                          th:attr="data-id=${mantenimiento.id}"
+                          onclick="confirmarEliminarMantenimiento(this)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div th:if="${mantenimientos.isEmpty()}" class="alert alert-info">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        Este vehículo no tiene historial de mantenimientos.
+      </div>
+    </div>
+
+    <!-- Historial de reservas -->
+    <div class="tab-pane fade" id="reservas" role="tabpanel">
+      <div th:if="${!reservas.isEmpty()}">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+              <th>Cliente</th>
+              <th>Fecha Reserva</th>
+              <th>Fecha Inicio</th>
+              <th>Fecha Fin</th>
+              <th>Estado</th>
+              <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="reserva : ${reservas}">
+              <td th:text="${reserva.cliente.nombreCompleto}"></td>
+              <td th:text="${#temporals.format(reserva.fechaReserva, 'dd/MM/yyyy')}"></td>
+              <td th:text="${#temporals.format(reserva.fechaInicio, 'dd/MM/yyyy')}"></td>
+              <td th:text="${#temporals.format(reserva.fechaFin, 'dd/MM/yyyy')}"></td>
+              <td>
+                <span th:if="${reserva.cancelada}" class="badge bg-danger">CANCELADA</span>
+                <span th:if="${!reserva.cancelada}">
+                  <span th:if="${reserva.fechaInicio.isAfter(T(java.time.LocalDate).now())}" class="badge bg-success">CONFIRMADA</span>
+                  <span th:if="${reserva.fechaInicio.isBefore(T(java.time.LocalDate).now())}" class="badge bg-info text-dark">COMPLETADA</span>
+                </span>
+              </td>
+              <td th:text="${'$' + #numbers.formatDecimal(reserva.pagoTotal, 1, 2)}"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div th:if="${reservas.isEmpty()}" class="alert alert-info">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        Este vehículo no tiene historial de reservas.
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para editar mantenimiento -->
+  <div class="modal fade" id="editarMantenimientoModal" tabindex="-1" aria-labelledby="editarMantenimientoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="editarMantenimientoModalLabel">Editar mantenimiento</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form th:action="@{'/admin/editar-mantenimiento/' + ${vehiculo.id}}" method="post">
+          <input type="hidden" id="mantenimientoId" name="id">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="tipoMantenimientoEditar" class="form-label">Tipo de mantenimiento *</label>
+                  <select class="form-select" id="tipoMantenimientoEditar" name="tipoMantenimiento" required>
+                    <option value="">Seleccione un tipo</option>
+                    <option th:each="tipo : ${tiposMantenimiento}"
+                            th:value="${tipo.id}"
+                            th:text="${tipo.descripcion}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="costoEditar" class="form-label">Costo *</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" step="0.01" min="0" class="form-control"
+                           id="costoEditar" name="costo" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="fechaInicioEditar" class="form-label">Fecha de inicio *</label>
+                  <input type="date" class="form-control" id="fechaInicioEditar"
+                         name="fechaInicio" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="fechaFinEditar" class="form-label">Fecha de finalización</label>
+                  <input type="date" class="form-control" id="fechaFinEditar" name="fechaFin">
+                  <small class="text-muted">Dejar en blanco si aún está en proceso</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save me-1"></i> Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para confirmar baja del vehículo -->
+  <div class="modal fade" id="confirmarBajaModal" tabindex="-1" aria-labelledby="confirmarBajaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="confirmarBajaModalLabel">Confirmar baja del vehículo</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea dar de baja este vehículo?</p>
+          <p class="fw-bold" th:text="${'Vehículo: ' + vehiculo.marca + ' ' + vehiculo.modelo + ' (' + vehiculo.numeroPlaca + ')'}"></p>
+          <p>Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <form th:action="@{'/vehiculo-baja/' + ${vehiculo.id}}" method="post">
+            <button type="submit" class="btn btn-danger">Confirmar baja</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para nuevo mantenimiento -->
+  <div class="modal fade" id="nuevoMantenimientoModal" tabindex="-1" aria-labelledby="nuevoMantenimientoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="nuevoMantenimientoModalLabel">Registrar nuevo mantenimiento</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form th:action="@{'/admin/nuevo-mantenimiento/' + ${vehiculo.id}}" method="post">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="tipoMantenimiento" class="form-label">Tipo de mantenimiento *</label>
+                  <select class="form-select" id="tipoMantenimiento" name="tipoMantenimiento" required>
+                    <option value="">Seleccione un tipo</option>
+                    <option th:each="tipo : ${tiposMantenimiento}"
+                            th:value="${tipo.id}"
+                            th:text="${tipo.descripcion}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="costo" class="form-label">Costo *</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" step="0.01" min="0" class="form-control"
+                           id="costo" name="costo" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="fechaInicio" class="form-label">Fecha de inicio *</label>
+                  <input type="date" class="form-control" id="fechaInicio"
+                         name="fechaInicio" th:value="${#temporals.format(today, 'yyyy-MM-dd')}" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="fechaFin" class="form-label">Fecha de finalización</label>
+                  <input type="date" class="form-control" id="fechaFin" name="fechaFin">
+                  <small class="text-muted">Dejar en blanco si aún está en proceso</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save me-1"></i> Guardar mantenimiento
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+<footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+
+<script>
+  // Configurar el modal de edición cuando se hace clic en el botón
+  document.getElementById('editarMantenimientoModal').addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const modal = this;
+
+    // Extraer datos del botón
+    const id = button.getAttribute('data-id');
+    const tipo = button.getAttribute('data-tipo');
+    const fechaInicio = button.getAttribute('data-fechainicio');
+    const fechaFin = button.getAttribute('data-fechafin');
+    const costo = button.getAttribute('data-costo');
+
+    // Actualizar el formulario
+    modal.querySelector('#mantenimientoId').value = id;
+    modal.querySelector('#tipoMantenimientoEditar').value = tipo;
+    modal.querySelector('#fechaInicioEditar').value = fechaInicio;
+    modal.querySelector('#fechaFinEditar').value = fechaFin || '';
+    modal.querySelector('#costoEditar').value = costo;
+  });
+
+  function confirmarEliminarMantenimiento(button) {
+    const mantenimientoId = button.getAttribute('data-id');
+    if (confirm('¿Está seguro que desea eliminar este registro de mantenimiento?')) {
+      fetch('/admin/eliminar-mantenimiento/' + mantenimientoId, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }).then(response => {
+        if (response.ok) {
+          location.reload();
+        }
+      });
+    }
+  }
+</script>
+</body>
+</html>

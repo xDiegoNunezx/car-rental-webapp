@@ -33,4 +33,8 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> findReservasFuturasPorVehiculo(@Param("vehiculoId") Long vehiculoId);
 
     Boolean existsReservaByVehiculo(Vehiculo vehiculo);
+
+    // Obtener todas las reservas de un Vehículo
+    @Query("SELECT r FROM Reserva r WHERE r.vehiculo.id = :vehiculoId")
+    List<Reserva> findReservasByVehiculo(Long vehiculoId);
 }
