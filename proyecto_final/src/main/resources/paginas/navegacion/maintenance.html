@@ -5,7 +5,12 @@
 <body>
 <header th:replace="~{plantillas/plantilla :: header}"></header>
 <main class="container text-center shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-  <h1 class="mb-4">Mantenimiento de Vehículos</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Mantenimiento de vehículos</h1>
+    <a th:href="@{/admin}" class="btn btn-secondary">
+      <i class="bi bi-arrow-left"></i> Volver
+    </a>
+  </div>
 
   <!-- Pestañas para navegar entre las secciones -->
   <ul class="nav nav-tabs justify-content-center mb-4" id="myTab" role="tablist">

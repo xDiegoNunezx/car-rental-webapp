@@ -17,4 +17,6 @@ public interface ReservaService {
     void cancelarReserva(Long reservaId);
 
     List<Reserva> obtenerReservasPorVehiculo(Long vehiculoId);
+
+    List<Reserva> obtenerTodasReservas();
 }

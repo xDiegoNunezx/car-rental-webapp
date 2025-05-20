@@ -40,7 +40,9 @@ public class AdminController {
     }
 
     @GetMapping("/reservations")
-    public String reservas() {
+    public String reservas(Model model) {
+        List<Reserva> reservas = reservaService.obtenerTodasReservas();
+        model.addAttribute("reservas", reservas);
         return "navegacion/reservations";
     }
 
