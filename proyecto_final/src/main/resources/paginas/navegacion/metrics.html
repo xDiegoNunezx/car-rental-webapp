@@ -1,12 +1,161 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      lang="es">
-<head th:replace="~{plantillas/plantilla :: head}"></head>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{plantillas/plantilla :: head}">
+  <title>Métricas de Reservas</title>
+</head>
 <body>
 <header th:replace="~{plantillas/plantilla :: header}"></header>
-<main class="container text-center shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-  <h1> Métricas </h1>
+<main class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-center mb-4">Métricas de Reservas</h1>
+    <a th:href="@{/admin}" class="btn btn-secondary">
+      <i class="bi bi-arrow-left"></i> Volver
+    </a>
+  </div>
+
+  <div class="row">
+    <!-- Métrica 1: Vehículos más rentados -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-primary text-white">
+          <h5 class="card-title">Vehículos más rentados</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="vehiculosMasRentadosChart"></canvas>
+          <p class="mt-3 text-muted">Top 5 de vehículos con más reservas en el período seleccionado.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Métrica 2: Ingresos por mes -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-success text-white">
+          <h5 class="card-title">Ingresos mensuales</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="ingresosMensualesChart"></canvas>
+          <p class="mt-3 text-muted">Evolución de los ingresos por reservas en los últimos 12 meses.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Métrica 3: Uso de servicios adicionales -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-info text-white">
+          <h5 class="card-title">Servicios adicionales</h5>
+        </div>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col-4">
+              <h6>Asiento infantil</h6>
+              <h4 th:text="${'% ' + porcentajeAsientoInfantil}">25%</h4>
+            </div>
+            <div class="col-4">
+              <h6>Asiento elevador</h6>
+              <h4 th:text="${'% ' + porcentajeAsientoElevador}">15%</h4>
+            </div>
+            <div class="col-4">
+              <h6>Conductores extra</h6>
+              <h4 th:text="${'% ' + porcentajeConductoresAdicionales}">30%</h4>
+            </div>
+          </div>
+          <p class="mt-3 text-muted">Porcentaje de reservas que incluyen cada servicio adicional.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Métrica 4: Tasa de cancelación -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-warning text-dark">
+          <h5 class="card-title">Tasa de cancelación</h5>
+        </div>
+        <div class="card-body">
+          <div class="text-center">
+            <h1 th:text="${tasaCancelacion + '%'}">12%</h1>
+            <div class="progress mt-3" style="height: 30px;">
+              <div class="progress-bar bg-danger"
+                   th:style="'width:' + ${tasaCancelacion} + '%;'"
+                   role="progressbar"
+                   th:aria-valuenow="${tasaCancelacion}"
+                   aria-valuemin="0"
+                   aria-valuemax="100">
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 text-muted">Porcentaje de reservas canceladas respecto al total.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 <footer th:replace="~{plantillas/plantilla :: footer}"></footer>
+
+<!-- Scripts para gráficos -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  document.addEventListener('DOMContentLoaded', function() {
+    // Gráfico de vehículos más rentados
+    const ctx1 = document.getElementById('vehiculosMasRentadosChart');
+    new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: /*[[${vehiculosMasRentados.labels}]]*/ ['Modelo A', 'Modelo B', 'Modelo C', 'Modelo D', 'Modelo E'],
+        datasets: [{
+          label: 'Número de reservas',
+          data: /*[[${vehiculosMasRentados.data}]]*/ [12, 19, 8, 15, 7],
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.5)',
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(75, 192, 192, 0.5)',
+            'rgba(255, 159, 64, 0.5)',
+            'rgba(153, 102, 255, 0.5)'
+          ],
+          borderColor: [
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 99, 132, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(153, 102, 255, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // Gráfico de ingresos mensuales
+    const ctx2 = document.getElementById('ingresosMensualesChart');
+    new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: /*[[${ingresosMensuales.labels}]]*/ ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        datasets: [{
+          label: 'Ingresos ($)',
+          data: /*[[${ingresosMensuales.data}]]*/ [1200, 1900, 1800, 2100, 2500, 2200, 3000, 2800, 2700, 2900, 3100, 3500],
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+  });
+  /*]]>*/
+</script>
 </body>
 </html>

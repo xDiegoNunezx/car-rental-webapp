@@ -37,4 +37,24 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     // Obtener todas las reservas de un Vehículo
     @Query("SELECT r FROM Reserva r WHERE r.vehiculo.id = :vehiculoId")
     List<Reserva> findReservasByVehiculo(Long vehiculoId);
+
+    @Query("SELECT r.vehiculo, COUNT(r) as total " +
+            "FROM Reserva r " +
+            "WHERE r.cancelada = false " +
+            "GROUP BY r.vehiculo " +
+            "ORDER BY total DESC " +
+            "LIMIT 5")
+    List<Object[]> findTopVehiculosMasRentados();
+
+    @Query("SELECT FUNCTION('DATE_FORMAT', r.fechaReserva, '%Y-%m') as mes, SUM(r.pagoTotal) as total " +
+            "FROM Reserva r " +
+            "WHERE r.cancelada = false AND r.fechaReserva >= :fechaInicio " +
+            "GROUP BY FUNCTION('DATE_FORMAT', r.fechaReserva, '%Y-%m') " +
+            "ORDER BY FUNCTION('DATE_FORMAT', r.fechaReserva, '%Y-%m')")
+    List<Object[]> findIngresosMensuales(@Param("fechaInicio") LocalDate fechaInicio);
+
+    long countByAsientoInfantil(boolean asientoInfantil);
+    long countByAsientoElevador(boolean asientoElevador);
+    long countByConductoresAdicionales(boolean conductoresAdicionales);
+    long countByCancelada(boolean cancelada);
 }

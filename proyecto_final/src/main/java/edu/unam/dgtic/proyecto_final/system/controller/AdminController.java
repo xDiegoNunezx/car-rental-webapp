@@ -2,6 +2,7 @@ package edu.unam.dgtic.proyecto_final.system.controller;
 
 import edu.unam.dgtic.proyecto_final.system.model.*;
 import edu.unam.dgtic.proyecto_final.system.model.dto.VehiculoDto;
+import edu.unam.dgtic.proyecto_final.system.repository.ReservaRepository;
 import edu.unam.dgtic.proyecto_final.system.repository.TiposMantenimientoRepository;
 import edu.unam.dgtic.proyecto_final.system.service.MantenimientoService;
 import edu.unam.dgtic.proyecto_final.system.service.ReservaService;
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -30,6 +34,9 @@ public class AdminController {
 
     @Autowired
     ReservaService reservaService;
+
+    @Autowired
+    ReservaRepository reservaRepository;
 
     @Autowired
     TiposMantenimientoRepository tiposMantenimientoRepository;
@@ -47,7 +54,61 @@ public class AdminController {
     }
 
     @GetMapping("/metrics")
-    public String estadisticas() {
+    public String estadisticas(Model model) {
+        // 1. Vehículos más rentados (top 5)
+        List<Object[]> resultados = reservaRepository.findTopVehiculosMasRentados();
+
+        List<String> vehiculosLabels = new ArrayList<>();
+        List<Long> vehiculosData = new ArrayList<>();
+
+        for (Object[] resultado : resultados) {
+            Vehiculo vehiculo = (Vehiculo) resultado[0];
+            Long count = (Long) resultado[1];
+            vehiculosLabels.add(vehiculo.getModelo());
+            vehiculosData.add(count);
+        }
+
+        Map<String, Object> vehiculosMasRentados = new HashMap<>();
+        vehiculosMasRentados.put("labels", vehiculosLabels);
+        vehiculosMasRentados.put("data", vehiculosData);
+
+        model.addAttribute("vehiculosMasRentados", vehiculosMasRentados);
+
+        // 2. Ingresos mensuales (últimos 12 meses)
+        List<Object[]> ingresos = reservaRepository.findIngresosMensuales(LocalDate.now().minusMonths(12));
+
+        List<String> mesesLabels = new ArrayList<>();
+        List<Double> ingresosData = new ArrayList<>();
+
+        for (Object[] ingreso : ingresos) {
+            mesesLabels.add((String) ingreso[0]);
+            ingresosData.add((Double) ingreso[1]);
+        }
+
+        Map<String, Object> ingresosMensuales = new HashMap<>();
+        ingresosMensuales.put("labels", mesesLabels);
+        ingresosMensuales.put("data", ingresosData);
+
+        model.addAttribute("ingresosMensuales", ingresosMensuales);
+
+        // 3. Porcentaje de servicios adicionales
+        long totalReservas = reservaRepository.count();
+        long conAsientoInfantil = reservaRepository.countByAsientoInfantil(true);
+        long conAsientoElevador = reservaRepository.countByAsientoElevador(true);
+        long conConductoresAdicionales = reservaRepository.countByConductoresAdicionales(true);
+
+        model.addAttribute("porcentajeAsientoInfantil",
+                totalReservas > 0 ? Math.round((conAsientoInfantil * 100.0 / totalReservas)) : 0);
+        model.addAttribute("porcentajeAsientoElevador",
+                totalReservas > 0 ? Math.round((conAsientoElevador * 100.0 / totalReservas)) : 0);
+        model.addAttribute("porcentajeConductoresAdicionales",
+                totalReservas > 0 ? Math.round((conConductoresAdicionales * 100.0 / totalReservas)) : 0);
+
+        // 4. Tasa de cancelación
+        long reservasCanceladas = reservaRepository.countByCancelada(true);
+        model.addAttribute("tasaCancelacion",
+                totalReservas > 0 ? Math.round((reservasCanceladas * 100.0 / totalReservas)) : 0);
+
         return "navegacion/metrics";
     }
 
