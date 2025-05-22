@@ -19,4 +19,6 @@ public interface ReservaService {
     List<Reserva> obtenerReservasPorVehiculo(Long vehiculoId);
 
     List<Reserva> obtenerTodasReservas();
+
+    Reserva obtenerReservaPorId(Long reservaId);
 }

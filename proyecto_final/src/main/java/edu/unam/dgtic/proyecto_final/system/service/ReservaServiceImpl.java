@@ -90,6 +90,11 @@ public class ReservaServiceImpl implements ReservaService {
         return reservaRepository.findAll();
     }
 
+    @Override
+    public Reserva obtenerReservaPorId(Long reservaId) {
+        return reservaRepository.findById(reservaId).get();
+    }
+
     public boolean verificarDisponibilidad(Vehiculo vehiculo) {
         return !reservaRepository.existsReservaByVehiculo(vehiculo);
     }

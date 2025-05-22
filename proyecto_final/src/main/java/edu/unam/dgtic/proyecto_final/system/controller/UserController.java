@@ -9,6 +9,8 @@ import edu.unam.dgtic.proyecto_final.system.repository.VehiculoRepository;
 import edu.unam.dgtic.proyecto_final.system.service.ClienteService;
 import edu.unam.dgtic.proyecto_final.system.service.ReservaService;
 import edu.unam.dgtic.proyecto_final.system.service.VehiculoService;
+import edu.unam.dgtic.proyecto_final.system.util.PdfGenerator;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -136,5 +140,18 @@ public class UserController {
         }
 
         return "redirect:/user/profile";
+    }
+
+    @GetMapping("/reserva/pdf/{reservaId}")
+    public void generarPdfReserva(@PathVariable Long reservaId, HttpServletResponse response) throws IOException {
+        Reserva reserva = reservaService.obtenerReservaPorId(reservaId);
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=reserva_" + reservaId + ".pdf");
+
+        PdfGenerator pdfGenerator = new PdfGenerator();
+        ByteArrayOutputStream baos = pdfGenerator.generarPdfReserva(reserva);
+        response.getOutputStream().write(baos.toByteArray());
+        response.getOutputStream().flush();
     }
 }

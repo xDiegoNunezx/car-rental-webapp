@@ -141,6 +141,10 @@
         </td>
         <td>
           <div class="d-flex flex-column gap-1">
+            <a th:href="@{/user/reserva/pdf/{reservaId}(reservaId=${reserva.id})}"
+               class="btn btn-info btn-sm w-100">
+              <i class="bi bi-file-earmark-pdf"></i> Generar PDF
+            </a>
             <form th:action="@{/user/reserva/cancelar/{reservaId}(reservaId=${reserva.id})}"
                   method="post"
                   th:if="${!reserva.cancelada && reserva.fechaInicio.isAfter(T(java.time.LocalDate).now())}">
