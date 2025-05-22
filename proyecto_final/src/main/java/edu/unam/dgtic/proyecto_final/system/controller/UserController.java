@@ -53,6 +53,7 @@ public class UserController {
         Long usuarioId = cliente.getId();
 
         List<Reserva> reservas = reservaService.obtenerReservasDeCliente(usuarioId);
+        modelo.addAttribute("usuario", cliente);
         modelo.addAttribute("reservas", reservas);
 
         return "navegacion/profile";

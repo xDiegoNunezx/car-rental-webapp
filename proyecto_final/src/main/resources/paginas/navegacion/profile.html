@@ -4,6 +4,91 @@
 <body>
 <header th:replace="~{plantillas/plantilla :: header}"></header>
 <main class="container text-center shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+  <!-- Sección de Perfil del Usuario -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h2>Mi Perfil</h2>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <!-- Información Personal -->
+        <div class="col-md-6">
+          <h4 class="mb-3">Datos Personales</h4>
+          <div class="table-responsive">
+            <table class="table table-borderless">
+              <tbody>
+              <tr>
+                <th scope="row">Nombre:</th>
+                <td th:text="${usuario.nombreCompleto}"></td>
+              </tr>
+              <tr>
+                <th scope="row">RFC:</th>
+                <td th:text="${usuario.rfc}"></td>
+              </tr>
+              <tr>
+                <th scope="row">Email:</th>
+                <td th:text="${usuario.email}"></td>
+              </tr>
+              <tr>
+                <th scope="row">Teléfono:</th>
+                <td th:text="${usuario.numeroTelefono}"></td>
+              </tr>
+              <tr>
+                <th scope="row">Fecha Nacimiento:</th>
+                <td th:text="${#temporals.format(usuario.fechaNacimiento, 'dd/MM/yyyy')}"></td>
+              </tr>
+              <tr>
+                <th scope="row">Dirección:</th>
+                <td th:text="${usuario.direccion}"></td>
+              </tr>
+              <tr>
+                <th scope="row">Ciudad:</th>
+                <td th:text="${usuario.ciudad}"></td>
+              </tr>
+              <tr>
+                <th scope="row">País:</th>
+                <td th:text="${usuario.pais}"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Información de Licencia (solo para clientes) -->
+        <div class="col-md-6">
+          <h4 class="mb-3">Licencia de Conducir</h4>
+          <div class="table-responsive">
+            <table class="table table-borderless">
+              <tbody>
+              <tr>
+                <th scope="row">Número de Licencia:</th>
+                <td th:text="${usuario.numeroLicencia}"></td>
+              </tr>
+              <tr>
+                <th scope="row">Fecha de Emisión:</th>
+                <td th:text="${#temporals.format(usuario.fechaEmisionLicencia, 'dd/MM/yyyy')}"></td>
+              </tr>
+              <tr>
+                <th scope="row">Fecha de Expiración:</th>
+                <td th:text="${#temporals.format(usuario.fechaExpiracionLicencia, 'dd/MM/yyyy')}"></td>
+              </tr>
+              <tr>
+                <th scope="row">Estado:</th>
+                <td>
+                    <span th:if="${usuario.fechaExpiracionLicencia.isBefore(T(java.time.LocalDate).now())}"
+                          class="badge bg-danger">Expirada</span>
+                  <span th:if="${!usuario.fechaExpiracionLicencia.isBefore(T(java.time.LocalDate).now())}"
+                        class="badge bg-success">Vigente</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <h1>Mis Reservas</h1>
   <p style="text-align: left;">Aquí puedes ver el historial de tus reservas de vehículos.</p>
 
