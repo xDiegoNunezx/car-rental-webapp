@@ -7,9 +7,136 @@
 <main class="container text-center shadow-lg p-3 mb-5 bg-body-tertiary rounded">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="mb-0">Mantenimiento de vehículos</h1>
-    <a th:href="@{/admin}" class="btn btn-secondary">
-      <i class="bi bi-arrow-left"></i> Volver
-    </a>
+    <div>
+      <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#nuevoVehiculoModal">
+        <i class="bi bi-plus-circle"></i> Nuevo Vehículo
+      </button>
+      <a th:href="@{/admin}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+      </a>
+    </div>
+  </div>
+
+  <!-- Modal para nuevo vehículo -->
+  <div class="modal fade" id="nuevoVehiculoModal" tabindex="-1" aria-labelledby="nuevoVehiculoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="nuevoVehiculoModalLabel">Agregar Nuevo Vehículo</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form th:action="@{/admin/guardar-vehiculo}" method="post" enctype="multipart/form-data">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <!-- Sección izquierda del formulario -->
+                <div class="mb-3">
+                  <label for="marcaVehiculo" class="form-label">Marca *</label>
+                  <select class="form-select" id="marcaVehiculo" name="marcaId" required>
+                    <option value="">Seleccione una marca</option>
+                    <option th:each="marca : ${marcasVehiculo}"
+                            th:value="${marca.id}"
+                            th:text="${marca.nombre}"></option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="nuevoModelo" class="form-label">Modelo *</label>
+                  <input type="text" class="form-control" id="nuevoModelo" name="modelo" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="nuevaPlaca" class="form-label">Placa *</label>
+                  <input type="text" class="form-control" id="nuevaPlaca" name="numeroPlaca" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="fechaFabricacion" class="form-label">Año de fabricación *</label>
+                  <input type="date" class="form-control" id="fechaFabricacion" name="fechaFabricacion" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="tipoCombustible" class="form-label">Tipo de Combustible *</label>
+                  <select class="form-select" id="tipoCombustible" name="tipoCombustibleId" required>
+                    <option value="">Seleccione un tipo</option>
+                    <option th:each="combustible : ${tiposCombustible}"
+                            th:value="${combustible.id}"
+                            th:text="${combustible.descripcion}"></option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <!-- Sección derecha del formulario -->
+                <div class="mb-3">
+                  <label for="tipoCarroceria" class="form-label">Tipo de carrocería *</label>
+                  <select class="form-select" id="tipoCarroceria" name="tipoCarroceriaId" required>
+                    <option value="">Seleccione un tipo</option>
+                    <option th:each="carroceria : ${tiposCarroceria}"
+                            th:value="${carroceria.id}"
+                            th:text="${carroceria.descripcion}"></option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="transmision" class="form-label">Transmisión *</label>
+                  <select class="form-select" id="transmision" name="transmisionId" required>
+                    <option value="">Seleccione un tipo</option>
+                    <option th:each="transmision : ${transmisiones}"
+                            th:value="${transmision.id}"
+                            th:text="${transmision.descripcion}"></option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="kilometraje" class="form-label">Kilometraje *</label>
+                  <input type="number" class="form-control" id="kilometraje" name="kilometraje"
+                         min="0" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="nuevaCapacidad" class="form-label">Capacidad (personas) *</label>
+                  <input type="number" class="form-control" id="nuevaCapacidad" name="capacidadPersonas"
+                         min="1" max="20" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="disponibilidad" class="form-label">Disponibilidad *</label>
+                  <select class="form-select" id="disponibilidad" name="disponibilidadId" required>
+                    <option value="">Seleccione disponibilidad</option>
+                    <option th:each="disp : ${disponibilidades}"
+                            th:value="${disp.id}"
+                            th:text="${disp.descripcion}"></option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="nuevoPrecio" class="form-label">Precio por día ($) *</label>
+                  <input type="number" step="0.01" class="form-control" id="nuevoPrecio" name="precioDia"
+                         min="0" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="mb-3">
+                  <label for="nuevaImagen" class="form-label">Imagen del vehículo *</label>
+                  <input type="file" class="form-control" id="nuevaImagen" name="imagen" accept="image/*" required>
+                  <small class="text-muted">Formatos aceptados: JPG, PNG, GIF. Tamaño máximo: 5MB</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save me-1"></i> Guardar Vehículo
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
   <!-- Pestañas para navegar entre las secciones -->

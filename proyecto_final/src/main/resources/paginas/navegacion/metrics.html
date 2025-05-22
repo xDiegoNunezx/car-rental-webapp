@@ -141,10 +141,10 @@
     new Chart(ctx2, {
       type: 'line',
       data: {
-        labels: /*[[${ingresosMensuales.labels}]]*/ ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        labels: [[${ingresosMensuales.labels}]],
         datasets: [{
           label: 'Ingresos ($)',
-          data: /*[[${ingresosMensuales.data}]]*/ [1200, 1900, 1800, 2100, 2500, 2200, 3000, 2800, 2700, 2900, 3100, 3500],
+          data: [[${ingresosMensuales.data}]],
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
           tension: 0.1

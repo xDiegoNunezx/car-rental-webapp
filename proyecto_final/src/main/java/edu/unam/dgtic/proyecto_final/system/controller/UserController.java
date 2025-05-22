@@ -69,7 +69,7 @@ public class UserController {
     public String cancelarReserva(@PathVariable Long reservaId, RedirectAttributes redirectAttributes) {
         reservaService.cancelarReserva(reservaId);
         redirectAttributes.addFlashAttribute("mensaje", "Reserva cancelada con éxito");
-        return "redirect:/user/profile"; // o redirige a la lista de reservas
+        return "redirect:/user/profile";
     }
 
     @GetMapping("/reserva/book-now")
@@ -93,7 +93,8 @@ public class UserController {
     public String recibirReserva(
             Reserva reserva,
             BindingResult bindingResult,
-            Model model
+            Model model,
+            Authentication authentication
     ) {
         Vehiculo vehiculo = vehiculoService.obtenerVehiculoEntidad(reserva.getVehiculo().getId()).get();
 
@@ -106,10 +107,19 @@ public class UserController {
         }
 
         // Guardar reserva
+        Optional<Cliente> clienteOpt = clienteService.obtenerPorEmail(authentication.getName());
+        if (!clienteOpt.isPresent()) {
+            model.addAttribute("error", "No se encontró información del cliente");
+            return "/user/profile";
+        }
+
+        Cliente cliente = clienteOpt.get();
+        Long usuarioId = cliente.getId();
+
         String cadena = "Reserva Registrada: " + reserva;
         try {
             Reserva nuevaReserva = reservaService.crearReserva(
-                    1L,
+                    usuarioId,
                     reserva.getVehiculo().getId(),
                     reserva.getFechaInicio(),
                     reserva.getFechaFin(),

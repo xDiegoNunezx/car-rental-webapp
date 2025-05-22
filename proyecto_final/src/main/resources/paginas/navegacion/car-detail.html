@@ -13,12 +13,149 @@
       <a th:href="@{/admin/maintenance}" class="btn btn-secondary me-2">
         <i class="bi bi-arrow-left"></i> Volver
       </a>
-      <a th:href="@{'/admin/editar-auto/' + ${vehiculo.id}}" class="btn btn-primary me-2">
+      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editarVehiculoModal">
         <i class="bi bi-pencil-fill"></i> Editar
-      </a>
+      </button>
       <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmarBajaModal">
         <i class="bi bi-trash-fill"></i> Dar de baja
       </button>
+    </div>
+  </div>
+
+  <!-- Modal para editar vehículo -->
+  <div class="modal fade" id="editarVehiculoModal" tabindex="-1" aria-labelledby="editarVehiculoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="editarVehiculoModalLabel">Editar Vehículo</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form th:action="@{'/admin/actualizar-vehiculo/' + ${vehiculo.id}}" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="id" th:value="${vehiculo.id}">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <!-- Sección izquierda del formulario -->
+                <div class="mb-3">
+                  <label for="marcaVehiculo" class="form-label">Marca *</label>
+                  <select class="form-select" id="marcaVehiculo" name="marcaId" required>
+                    <option value="">Seleccione una marca</option>
+                    <option th:each="marca : ${marcasVehiculo}"
+                            th:value="${marca.id}"
+                            th:text="${marca.nombre}"
+                            th:selected="${marca.nombre == vehiculo.marca}"></option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="modelo" class="form-label">Modelo *</label>
+                  <input type="text" class="form-control" id="modelo" name="modelo"
+                         th:value="${vehiculo.modelo}" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="numeroPlaca" class="form-label">Placa *</label>
+                  <input type="text" class="form-control" id="numeroPlaca" name="numeroPlaca"
+                         th:value="${vehiculo.numeroPlaca}" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="fechaFabricacion" class="form-label">Año de fabricación *</label>
+                  <input type="date" class="form-control" id="fechaFabricacion" name="fechaFabricacion"
+                         th:value="${vehiculo.fechaFabricacion}" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="tipoCombustible" class="form-label">Tipo de Combustible *</label>
+                  <select class="form-select" id="tipoCombustible" name="tipoCombustibleId" required>
+                    <option value="">Seleccione un tipo</option>
+                    <option th:each="combustible : ${tiposCombustible}"
+                            th:value="${combustible.id}"
+                            th:text="${combustible.descripcion}"
+                            th:selected="${combustible.descripcion == vehiculo.tipoCombustible}"></option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <!-- Sección derecha del formulario -->
+                <div class="mb-3">
+                  <label for="tipoCarroceria" class="form-label">Tipo de carrocería *</label>
+                  <select class="form-select" id="tipoCarroceria" name="tipoCarroceriaId" required>
+                    <option value="">Seleccione un tipo</option>
+                    <option th:each="carroceria : ${tiposCarroceria}"
+                            th:value="${carroceria.id}"
+                            th:text="${carroceria.descripcion}"
+                            th:selected="${carroceria.descripcion == vehiculo.tipoCarroceria}"></option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="transmision" class="form-label">Transmisión *</label>
+                  <select class="form-select" id="transmision" name="transmisionId" required>
+                    <option value="">Seleccione un tipo</option>
+                    <option th:each="transmision : ${transmisiones}"
+                            th:value="${transmision.id}"
+                            th:text="${transmision.descripcion}"
+                            th:selected="${transmision.descripcion == vehiculo.transmision}"></option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="kilometraje" class="form-label">Kilometraje *</label>
+                  <input type="number" class="form-control" id="kilometraje" name="kilometraje"
+                         th:value="${vehiculo.kilometraje}" min="0" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="capacidadPersonas" class="form-label">Capacidad (personas) *</label>
+                  <input type="number" class="form-control" id="capacidadPersonas" name="capacidadPersonas"
+                         th:value="${vehiculo.capacidadPersonas}" min="1" max="20" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="disponibilidad" class="form-label">Disponibilidad *</label>
+                  <select class="form-select" id="disponibilidad" name="disponibilidadId" required>
+                    <option value="">Seleccione disponibilidad</option>
+                    <option th:each="disp : ${disponibilidades}"
+                            th:value="${disp.id}"
+                            th:text="${disp.descripcion}"
+                            th:selected="${disp.descripcion == vehiculo.disponibilidad}"></option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="precioDia" class="form-label">Precio por día ($) *</label>
+                  <input type="number" step="0.01" class="form-control" id="precioDia" name="precioDia"
+                         th:value="${vehiculo.precioDia}" min="0" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="mb-3">
+                  <label for="imagen" class="form-label">Imagen del vehículo</label>
+                  <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                  <small class="text-muted">Dejar en blanco para mantener la imagen actual</small>
+                </div>
+
+                <div class="text-center">
+                  <img th:if="${vehiculo.imagenBase64 != null && vehiculo.imagenBase64.length > 0}"
+                       th:src="${vehiculo.imagenBase64}"
+                       class="img-thumbnail" style="max-height: 200px;" alt="Imagen actual">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save me-1"></i> Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -263,7 +400,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <form th:action="@{'/vehiculo-baja/' + ${vehiculo.id}}" method="post">
+          <form th:action="@{'/admin/vehiculo-baja/' + ${vehiculo.id}}" method="post">
             <button type="submit" class="btn btn-danger">Confirmar baja</button>
           </form>
         </div>
